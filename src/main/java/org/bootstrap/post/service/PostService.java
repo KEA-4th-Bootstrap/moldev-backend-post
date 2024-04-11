@@ -47,7 +47,6 @@ public class PostService {
 
     public PostDetailResponseDto getPost(Long postId) {
         Post post = postHelper.findPostOrThrow(postId);
-        String category = postMapper.toCategoryDesc(post.getCategory());
-        return postMapper.toPostDetailResponseDto(post, category);
+        return postMapper.toPostDetailResponseDto(post);
     }
 }

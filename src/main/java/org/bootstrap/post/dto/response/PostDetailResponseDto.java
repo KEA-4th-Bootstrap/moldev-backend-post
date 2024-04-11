@@ -13,14 +13,14 @@ public record PostDetailResponseDto(
         String thumbnail,
         String category
 ) {
-    public static PostDetailResponseDto of (Post post, String category) {
+    public static PostDetailResponseDto of (Post post) {
         return PostDetailResponseDto.builder()
                 .id(post.getId())
                 .memberId(post.getMemberId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .thumbnail(post.getThumbnail())
-                .category(category)
+                .category(post.getCategory().getDesc())
                 .build();
     }
 }

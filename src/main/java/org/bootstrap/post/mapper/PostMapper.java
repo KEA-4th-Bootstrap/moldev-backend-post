@@ -17,7 +17,5 @@ public class PostMapper {
         return FrontUrlResponseDto.of(frontUrl);
     }
 
-    public String toCategoryDesc(CategoryType categoryType) { return categoryType.getDesc(); }
-
-    public PostDetailResponseDto toPostDetailResponseDto(Post post, String category) { return PostDetailResponseDto.of(post, category); }
+    public PostDetailResponseDto toPostDetailResponseDto(Post post) { return PostDetailResponseDto.of(post); }
 }
