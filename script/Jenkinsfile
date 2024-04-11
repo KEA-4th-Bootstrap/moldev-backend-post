@@ -48,6 +48,7 @@ pipeline {
                     sh "docker build -t ${DOCKER_NAME}/${DOCKER_FILE}:${currentBuild.number} ."
                 }
             }
+
         }
 
         stage('Push Docker Image') {
