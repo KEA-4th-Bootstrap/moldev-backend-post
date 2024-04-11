@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.common.SuccessResponse;
 import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.dto.response.FrontUrlResponseDto;
+import org.bootstrap.post.dto.response.PostDetailResponseDto;
+import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,5 +30,11 @@ public class PostController {
                                                          @RequestPart final PostRequestDto requestDto) {
         postService.updatePost(postId, requestDto, thumbnail);
         return SuccessResponse.ok(null);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SuccessResponse<?>> getPost(@PathVariable final Long postId) {
+        final PostDetailResponseDto responseDto = postService.getPost(postId);
+        return SuccessResponse.ok(responseDto);
     }
 }
