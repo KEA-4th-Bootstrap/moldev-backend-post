@@ -10,6 +10,8 @@ import org.bootstrap.post.utils.FrontUrlGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Objects;
+
 @RequiredArgsConstructor
 @Service
 public class PostService {
@@ -27,5 +29,18 @@ public class PostService {
     private Post createPostAndSave(Long memberId, PostRequestDto requestDto, String thumbnail) {
         Post post = postMapper.toEntity(requestDto, memberId, thumbnail);
         return postHelper.savePost(post);
+    }
+
+    public void updatePost(Long postId, PostRequestDto requestDto, MultipartFile thumbnail) {
+        Post post = postHelper.findPostOrThrow(postId);
+        post.updatePost(requestDto);
+        checkThumbnailAndUpdate(thumbnail, post);
+    }
+
+    private void checkThumbnailAndUpdate(MultipartFile thumbnail, Post post) {
+        if (!Objects.isNull(thumbnail)) {
+            String thumbnailString = postHelper.createStringThumbnail(thumbnail);
+            post.updateThumbnail(thumbnailString);
+        }
     }
 }
