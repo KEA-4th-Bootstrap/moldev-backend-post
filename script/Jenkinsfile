@@ -12,7 +12,7 @@ pipeline {
             steps {
                 dir('Epimetheus/backend/epimetheus') {
                     sh 'mkdir -p src/main/resources'
-                    withCredentials([file(credentialsId: 'application', variable: 'application')]) {
+                    withCredentials([file(credentialsId: 'post-application', variable: 'post-application')]) {
                         sh 'cp -f ${application} src/main/resources/application.yml'
                     }
                 }
@@ -42,7 +42,7 @@ pipeline {
             steps {
                 withCredentials([
                     string(credentialsId: 'docker-hub-name', variable: 'DOCKER_NAME'),
-                    string(credentialsId: 'docker-file', variable: 'DOCKER_FILE')
+                    string(credentialsId: 'docker-file-post', variable: 'DOCKER_FILE')
                 ]) {
                     // Docker 이미지에 Jenkins 빌드 번호를 태그로 추가
                     sh "docker build -t ${DOCKER_NAME}/${DOCKER_FILE}:${currentBuild.number} ."
@@ -54,7 +54,7 @@ pipeline {
             steps {
                 withCredentials([
                     string(credentialsId: 'docker-hub-name', variable: 'DOCKER_NAME'),
-                    string(credentialsId: 'docker-file', variable: 'DOCKER_FILE')
+                    string(credentialsId: 'docker-file-post', variable: 'DOCKER_FILE')
                 ]) {
                     // Docker 이미지를 빌드 번호 태그와 함께 푸시
                     sh "docker push ${DOCKER_NAME}/${DOCKER_FILE}:${currentBuild.number}"
@@ -77,7 +77,7 @@ pipeline {
             steps {
                 withCredentials([
                     string(credentialsId: 'docker-hub-name', variable: 'DOCKER_NAME'),
-                    string(credentialsId: 'docker-file-reply', variable: 'DOCKER_FILE')
+                    string(credentialsId: 'docker-file-post', variable: 'DOCKER_FILE')
                 ]) {
                     sh """
                         cd post

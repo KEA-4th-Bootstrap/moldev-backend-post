@@ -9,11 +9,13 @@ import org.bootstrap.post.helper.PostHelper;
 import org.bootstrap.post.mapper.PostMapper;
 import org.bootstrap.post.utils.FrontUrlGenerator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class PostService {
     private final PostMapper postMapper;
