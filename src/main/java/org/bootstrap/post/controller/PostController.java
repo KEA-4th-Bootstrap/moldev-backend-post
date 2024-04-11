@@ -3,6 +3,7 @@ package org.bootstrap.post.controller;
 import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.common.SuccessResponse;
 import org.bootstrap.post.dto.request.PostRequestDto;
+import org.bootstrap.post.dto.response.FrontUrlResponseDto;
 import org.bootstrap.post.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<SuccessResponse<?>> createPost(final Long memberId,
                                                          @RequestBody final PostRequestDto requestDto) {
-        postService.createPost(memberId, requestDto);
-        return SuccessResponse.created(null);
+        final FrontUrlResponseDto responseDto = postService.createPost(memberId, requestDto);
+        return SuccessResponse.created(responseDto);
     }
 }
