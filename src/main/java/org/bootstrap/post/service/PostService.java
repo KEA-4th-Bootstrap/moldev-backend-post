@@ -3,6 +3,7 @@ package org.bootstrap.post.service;
 import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.dto.response.FrontUrlResponseDto;
+import org.bootstrap.post.dto.response.PostDetailResponseDto;
 import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.helper.PostHelper;
 import org.bootstrap.post.mapper.PostMapper;
@@ -42,5 +43,11 @@ public class PostService {
             String thumbnailString = postHelper.createStringThumbnail(thumbnail);
             post.updateThumbnail(thumbnailString);
         }
+    }
+
+    public PostDetailResponseDto getPost(Long postId) {
+        Post post = postHelper.findPostOrThrow(postId);
+        String category = postMapper.toCategoryDesc(post.getCategory());
+        return postMapper.toPostDetailResponseDto(post, category);
     }
 }
