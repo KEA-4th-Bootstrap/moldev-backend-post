@@ -27,4 +27,8 @@ public class PostHelper {
         return postRepository.findById(postId)
                 .orElseThrow(() -> PostNotFoundException.EXCEPTION);
     }
+
+    public void deletePost (Long postId) {
+        postRepository.deleteById(postId);
+    }
 }
