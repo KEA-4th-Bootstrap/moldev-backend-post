@@ -49,4 +49,8 @@ public class PostService {
         Post post = postHelper.findPostOrThrow(postId);
         return postMapper.toPostDetailResponseDto(post);
     }
+
+    public void deletePost(Long postId) {
+        postHelper.deletePost(postId);
+    }
 }
