@@ -2,6 +2,7 @@ package org.bootstrap.post.helper;
 
 import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.entity.Post;
+import org.bootstrap.post.exception.PostNotFoundException;
 import org.bootstrap.post.repository.PostRepository;
 import org.bootstrap.post.utils.S3Provider;
 import org.springframework.stereotype.Component;
@@ -20,5 +21,10 @@ public class PostHelper {
 
     public Post savePost (Post post) {
         return postRepository.save(post);
+    }
+
+    public Post findPostOrThrow (Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> PostNotFoundException.EXCEPTION);
     }
 }
