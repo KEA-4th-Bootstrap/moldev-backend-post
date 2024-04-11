@@ -21,4 +21,12 @@ public class PostController {
         final FrontUrlResponseDto responseDto = postService.createPost(memberId, requestDto, thumbnail);
         return SuccessResponse.created(responseDto);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<SuccessResponse<?>> updatePost(@PathVariable final Long postId,
+                                                         @RequestPart final MultipartFile thumbnail,
+                                                         @RequestPart final PostRequestDto requestDto) {
+        postService.updatePost(postId, requestDto, thumbnail);
+        return SuccessResponse.ok(null);
+    }
 }

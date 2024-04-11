@@ -5,7 +5,10 @@ import lombok.*;
 import org.bootstrap.post.common.BaseTimeEntity;
 import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.entity.converter.CategoryTypeConverter;
+import org.bootstrap.post.utils.EntityUpdateValueUtils;
 import org.bootstrap.post.utils.EnumValueUtils;
+
+import static org.bootstrap.post.utils.EntityUpdateValueUtils.updateValue;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -38,5 +41,15 @@ public class Post extends BaseTimeEntity {
 
     public void updateFrontUrl(String frontUrl) {
         this.frontUrl = frontUrl;
+    }
+
+    public void updatePost(PostRequestDto requestDto) {
+        this.title = updateValue(this.title, requestDto.title());
+        this.content = updateValue(this.content, requestDto.content());
+        this.category = updateValue(this.category, EnumValueUtils.toEntityCode(CategoryType.class, requestDto.category()));
+    }
+
+    public void updateThumbnail(String thumbnail) {
+        this.thumbnail = updateValue(this.thumbnail, thumbnail);
     }
 }
