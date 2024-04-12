@@ -7,12 +7,11 @@ pipeline {
                 git branch: 'main', url: "https://github.com/KEA-4th-Bootstrap/moldev-backend-post"
             }
         }
-
         stage('Add Env') {
             steps {
                 dir('Epimetheus/backend/epimetheus') {
                     sh 'mkdir -p src/main/resources'
-                    withCredentials([file(credentialsId: 'post-application', variable: 'post-application')]) {
+                    withCredentials([file(credentialsId: 'post-application', variable: 'application')]) {
                         sh 'cp -f ${application} src/main/resources/application.yml'
                     }
                 }
