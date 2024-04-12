@@ -11,8 +11,8 @@ pipeline {
             steps {
                 dir('Epimetheus/backend/epimetheus') {
                     sh 'mkdir -p src/main/resources'
-                    withCredentials([file(credentialsId: 'post-application', variable: 'post-application')]) {
-                        sh 'cp -f ${post-application} src/main/resources/application.yml'
+                    withCredentials([file(credentialsId: 'post-application', variable: 'application')]) {
+                        sh 'cp -f ${application} src/main/resources/application.yml'
                     }
                 }
             }
