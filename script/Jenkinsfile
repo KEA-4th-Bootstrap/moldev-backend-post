@@ -16,6 +16,8 @@ pipeline {
                             mkdir -p ./src/main/resources
                             cp -f ${application} ./src/main/resources/application.yml
                         """
+                        sh "ls -l src/main/resources/"
+                        sh "cat src/main/resources/application.yml"
                     }
                 }
             }
