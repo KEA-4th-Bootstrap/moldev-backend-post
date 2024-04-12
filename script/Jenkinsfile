@@ -8,7 +8,7 @@ pipeline {
             }
         }
 
-        stage('Add Env') {
+        stage('Build') {
             steps {
                 dir('Epimetheus/backend/epimetheus') {
                     withCredentials([file(credentialsId: 'post-application', variable: 'application')]) {
@@ -18,19 +18,14 @@ pipeline {
                         """
                         sh "ls -l src/main/resources/"
                         sh "cat src/main/resources/application.yml"
+                        sh './gradlew clean build'
                     }
                 }
             }
-        }
-
-        stage('Build') {
-            steps {
-                sh './gradlew clean build'
-            }
             post {
-                always {
-                    jiraSendBuildInfo site: 'kea4bootstrap.atlassian.net'
-                }
+                  always {
+                         jiraSendBuildInfo site: 'kea4bootstrap.atlassian.net'
+                  }
             }
         }
 
