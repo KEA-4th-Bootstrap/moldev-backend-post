@@ -11,9 +11,11 @@ pipeline {
         stage('Add Env') {
             steps {
                 dir('Epimetheus/backend/epimetheus') {
-                    sh 'mkdir -p src/main/resources'
                     withCredentials([file(credentialsId: 'post-application', variable: 'application')]) {
-                        sh 'cp -f ${application} src/main/resources/application.yml'
+                        sh "
+                            mkdir -p ./src/main/resources
+                            cp -f ${application} ./src/main/resources/application.yml
+                        "
                     }
                 }
             }
