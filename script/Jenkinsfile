@@ -10,16 +10,14 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('Epimetheus/backend/epimetheus') {
-                    withCredentials([file(credentialsId: 'post-application', variable: 'application')]) {
-                        sh """
+                withCredentials([file(credentialsId: 'post-application', variable: 'application')]) {
+                    sh """
                             mkdir -p ./src/main/resources
                             cp -f ${application} ./src/main/resources/application.yml
-                        """
-                        sh "ls -l src/main/resources/"
-                        sh "cat src/main/resources/application.yml"
-                        sh './gradlew clean build'
-                    }
+                            ls -l src/main/resources/
+                            cat src/main/resources/application.yml
+                            ./gradlew clean build
+                    """
                 }
             }
             post {
