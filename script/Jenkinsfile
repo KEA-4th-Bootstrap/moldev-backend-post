@@ -12,10 +12,10 @@ pipeline {
             steps {
                 dir('Epimetheus/backend/epimetheus') {
                     withCredentials([file(credentialsId: 'post-application', variable: 'application')]) {
-                        sh "
+                        sh """
                             mkdir -p ./src/main/resources
                             cp -f ${application} ./src/main/resources/application.yml
-                        "
+                        """
                     }
                 }
             }
