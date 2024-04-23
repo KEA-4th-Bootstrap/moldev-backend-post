@@ -48,7 +48,7 @@ pipeline {
 
         }
 
-        stage('Push Docker Image') {
+        stage('deploy to prod') {
             steps {
                 withCredentials([
                     string(credentialsId: 'docker-hub-name', variable: 'DOCKER_NAME'),
