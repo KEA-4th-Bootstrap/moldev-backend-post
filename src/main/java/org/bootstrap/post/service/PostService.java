@@ -4,10 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.dto.response.FrontUrlResponseDto;
 import org.bootstrap.post.dto.response.PostDetailResponseDto;
+import org.bootstrap.post.dto.response.PostsCategoryResponseDto;
+import org.bootstrap.post.dto.response.PostsResponseDto;
+import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.helper.PostHelper;
 import org.bootstrap.post.mapper.PostMapper;
 import org.bootstrap.post.utils.FrontUrlGenerator;
+import org.bootstrap.post.vo.PostCategoryInfoVo;
+import org.bootstrap.post.vo.PostDetailVo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +27,16 @@ import java.util.Objects;
 public class PostService {
     private final PostMapper postMapper;
     private final PostHelper postHelper;
+
+    public PostsCategoryResponseDto getPostForCategory(Long memberId, CategoryType type, Pageable pageable) {
+        Page<PostCategoryInfoVo> postCategoryInfoVos = postHelper.findPostCategoryInfoVos(memberId, type, pageable);
+        return postMapper.toPostsCategoryResponseDto(postCategoryInfoVos);
+    }
+
+    public PostsResponseDto getPosts(Long memberId, Pageable pageable) {
+        Page<PostDetailVo> postDetailVos = postHelper.findPostDetailVos(memberId, pageable);
+        return postMapper.toPostsResponseDto(postDetailVos);
+    }
 
     public FrontUrlResponseDto createPost(Long memberId, PostRequestDto requestDto, MultipartFile thumbnail) {
         String thumbnailString = postHelper.createStringThumbnail(thumbnail);
