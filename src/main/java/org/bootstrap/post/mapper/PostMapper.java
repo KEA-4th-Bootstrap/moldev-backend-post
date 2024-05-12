@@ -1,7 +1,7 @@
 package org.bootstrap.post.mapper;
 
 import org.bootstrap.post.dto.request.PostRequestDto;
-import org.bootstrap.post.dto.response.FrontUrlResponseDto;
+import org.bootstrap.post.dto.response.CreatePostResponseDto;
 import org.bootstrap.post.dto.response.PostDetailResponseDto;
 import org.bootstrap.post.dto.response.PostsCategoryResponseDto;
 import org.bootstrap.post.dto.response.PostsResponseDto;
@@ -17,8 +17,8 @@ public class PostMapper {
         return Post.createPost(requestDto, memberId, thumbnail);
     }
 
-    public FrontUrlResponseDto toFrontUrlResponseDto(String frontUrl) {
-        return FrontUrlResponseDto.of(frontUrl);
+    public CreatePostResponseDto toCreatePostResponseDto(Post post) {
+        return CreatePostResponseDto.of(post);
     }
 
     public PostDetailResponseDto toPostDetailResponseDto(Post post) {

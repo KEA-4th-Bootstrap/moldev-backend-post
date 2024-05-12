@@ -3,7 +3,7 @@ package org.bootstrap.post.controller;
 import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.common.SuccessResponse;
 import org.bootstrap.post.dto.request.PostRequestDto;
-import org.bootstrap.post.dto.response.FrontUrlResponseDto;
+import org.bootstrap.post.dto.response.CreatePostResponseDto;
 import org.bootstrap.post.dto.response.PostDetailResponseDto;
 import org.bootstrap.post.dto.response.PostsCategoryResponseDto;
 import org.bootstrap.post.dto.response.PostsResponseDto;
@@ -45,7 +45,7 @@ public class PostController {
     public ResponseEntity<SuccessResponse<?>> createPost(final Long memberId,
                                                          @RequestPart final MultipartFile thumbnail,
                                                          @RequestPart final PostRequestDto requestDto) {
-        final FrontUrlResponseDto responseDto = postService.createPost(memberId, requestDto, thumbnail);
+        final CreatePostResponseDto responseDto = postService.createPost(memberId, requestDto, thumbnail);
         return SuccessResponse.created(responseDto);
     }
 
