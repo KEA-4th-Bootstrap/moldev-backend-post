@@ -5,7 +5,6 @@ import lombok.*;
 import org.bootstrap.post.common.BaseTimeEntity;
 import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.entity.converter.CategoryTypeConverter;
-import org.bootstrap.post.utils.EntityUpdateValueUtils;
 import org.bootstrap.post.utils.EnumValueUtils;
 
 import static org.bootstrap.post.utils.EntityUpdateValueUtils.updateValue;
@@ -27,7 +26,7 @@ public class Post extends BaseTimeEntity {
     private String content;
     @Convert(converter = CategoryTypeConverter.class)
     private CategoryType category;
-    private String frontUrl;
+    private String moldevId;
 
     public static Post createPost(PostRequestDto requestDto, Long memberId, String thumbnail) {
         return Post.builder()
@@ -36,11 +35,8 @@ public class Post extends BaseTimeEntity {
                 .category(EnumValueUtils.toEntityCode(CategoryType.class, requestDto.category()))
                 .content(requestDto.content())
                 .thumbnail(thumbnail)
+                .moldevId(requestDto.moldevId())
                 .build();
-    }
-
-    public void updateFrontUrl(String frontUrl) {
-        this.frontUrl = frontUrl;
     }
 
     public void updatePost(PostRequestDto requestDto) {

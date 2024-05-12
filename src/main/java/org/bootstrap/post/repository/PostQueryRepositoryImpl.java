@@ -49,7 +49,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
     }
 
     @Override
-    public Page<PostCategoryInfoVo> findPostCategoryInfoVos(Long memberId, CategoryType type, Pageable pageable) {
+    public Page<PostCategoryInfoVo> findPostCategoryInfoVos(String moldevId, CategoryType type, Pageable pageable) {
         List<PostCategoryInfoVo> contents = jpaQueryFactory
                 .select(Projections.constructor(PostCategoryInfoVo.class,
                         post.id,
@@ -59,7 +59,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                 ))
                 .from(post)
                 .where(
-                        eqMemberId(memberId),
+                        eqMoldevId(moldevId),
                         eqCategoryType(type)
                 )
                 .orderBy(post.id.desc())
@@ -68,7 +68,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
         JPAQuery<Post> countQuery = jpaQueryFactory
                 .selectFrom(post)
                 .where(
-                        eqMemberId(memberId),
+                        eqMoldevId(moldevId),
                         eqCategoryType(type)
                 );
 
@@ -81,5 +81,9 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 
     private BooleanExpression eqCategoryType(CategoryType type) {
         return type == null ? null : post.category.eq(type);
+    }
+
+    private BooleanExpression eqMoldevId(String modevId) {
+        return modevId == null ? null : post.moldevId.eq(modevId);
     }
 }
