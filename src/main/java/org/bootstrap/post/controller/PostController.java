@@ -3,7 +3,7 @@ package org.bootstrap.post.controller;
 import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.common.SuccessResponse;
 import org.bootstrap.post.dto.request.PostRequestDto;
-import org.bootstrap.post.dto.response.FrontUrlResponseDto;
+import org.bootstrap.post.dto.response.CreatePostResponseDto;
 import org.bootstrap.post.dto.response.PostDetailResponseDto;
 import org.bootstrap.post.dto.response.PostsCategoryResponseDto;
 import org.bootstrap.post.dto.response.PostsResponseDto;
@@ -45,14 +45,14 @@ public class PostController {
     public ResponseEntity<SuccessResponse<?>> createPost(final Long memberId,
                                                          @RequestPart final MultipartFile thumbnail,
                                                          @RequestPart final PostRequestDto requestDto) {
-        final FrontUrlResponseDto responseDto = postService.createPost(memberId, requestDto, thumbnail);
+        final CreatePostResponseDto responseDto = postService.createPost(memberId, requestDto, thumbnail);
         return SuccessResponse.created(responseDto);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<SuccessResponse<?>> updatePost(@PathVariable("id") final Long postId,
-                                                         @RequestPart final MultipartFile thumbnail,
-                                                         @RequestPart final PostRequestDto requestDto) {
+                                                         @RequestPart(required = false) final MultipartFile thumbnail,
+                                                         @RequestPart(required = false) final PostRequestDto requestDto) {
         postService.updatePost(postId, requestDto, thumbnail);
         return SuccessResponse.ok(null);
     }

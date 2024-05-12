@@ -2,7 +2,7 @@ package org.bootstrap.post.service;
 
 import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.dto.request.PostRequestDto;
-import org.bootstrap.post.dto.response.FrontUrlResponseDto;
+import org.bootstrap.post.dto.response.CreatePostResponseDto;
 import org.bootstrap.post.dto.response.PostDetailResponseDto;
 import org.bootstrap.post.dto.response.PostsCategoryResponseDto;
 import org.bootstrap.post.dto.response.PostsResponseDto;
@@ -38,12 +38,12 @@ public class PostService {
         return postMapper.toPostsResponseDto(postDetailVos);
     }
 
-    public FrontUrlResponseDto createPost(Long memberId, PostRequestDto requestDto, MultipartFile thumbnail) {
+    public CreatePostResponseDto createPost(Long memberId, PostRequestDto requestDto, MultipartFile thumbnail) {
         String thumbnailString = postHelper.createStringThumbnail(thumbnail);
         Post post = createPostAndSave(memberId, requestDto, thumbnailString);
         String frontendUrl = FrontUrlGenerator.createFrontUrl(post, requestDto.moldevId());
         post.updateFrontUrl(frontendUrl);
-        return postMapper.toFrontUrlResponseDto(frontendUrl);
+        return postMapper.toCreatePostResponseDto(post);
     }
 
     private Post createPostAndSave(Long memberId, PostRequestDto requestDto, String thumbnail) {
