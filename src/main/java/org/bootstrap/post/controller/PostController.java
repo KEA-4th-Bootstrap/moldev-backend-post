@@ -20,26 +20,33 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostController {
     private final PostService postService;
 
-    @GetMapping
+    @GetMapping("/{id}")
     public ResponseEntity<SuccessResponse<?>> getPosts(@RequestHeader("id") final Long memberId,
                                                        final Pageable pageable) {
         final PostsResponseDto responseDto = postService.getPosts(memberId, pageable);
         return SuccessResponse.ok(responseDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/detail")
     public ResponseEntity<SuccessResponse<?>> getPost(@PathVariable("id") final Long postId) {
         final PostDetailResponseDto responseDto = postService.getPost(postId);
         return SuccessResponse.ok(responseDto);
     }
 
-    @GetMapping("/category")
-    public ResponseEntity<SuccessResponse<?>> getPostForCategory(@RequestHeader("id") final Long memberId,
+    @GetMapping("/mission-control")
+    public ResponseEntity<SuccessResponse<?>> getPostForCategory(@RequestParam final String moldevId,
                                                                  @RequestParam final CategoryType type,
                                                                  final Pageable pageable) {
-        final PostsCategoryResponseDto responseDto = postService.getPostForCategory(memberId, type, pageable);
+        final PostsCategoryResponseDto responseDto = postService.getPostForCategory(moldevId, type, pageable);
         return SuccessResponse.ok(responseDto);
     }
+
+//    @GetMapping("/category")
+//    public ResponseEntity<SuccessResponse<?>> getPostForCategoryAndMoldevId(@RequestParam("id") final Long memberId,
+//                                                                          @RequestParam final CategoryType type) {
+//        final PostsCategoryResponseDto responseDto = postService.getPostForCategory(memberId, type);
+//        return SuccessResponse.ok(responseDto);
+//    }
 
     @PostMapping
     public ResponseEntity<SuccessResponse<?>> createPost(@RequestHeader("id") final Long memberId,

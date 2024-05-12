@@ -9,5 +9,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostQueryRepository {
     Page<PostDetailVo> findPostDetailVos(Long memberId, Pageable pageable);
-    Page<PostCategoryInfoVo> findPostCategoryInfoVos(Long memberId, CategoryType type, Pageable pageable);
+    Page<PostCategoryInfoVo> findPostCategoryInfoVos(String moldevId, CategoryType type, Pageable pageable);
 }

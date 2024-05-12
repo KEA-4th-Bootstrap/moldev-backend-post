@@ -40,8 +40,8 @@ public class PostHelper {
                 .orElseThrow(() -> PostNotFoundException.EXCEPTION);
     }
 
-    public Page<PostCategoryInfoVo> findPostCategoryInfoVos(Long memberId, CategoryType type, Pageable pageable) {
-        return postRepository.findPostCategoryInfoVos(memberId, type, pageable);
+    public Page<PostCategoryInfoVo> findPostCategoryInfoVos(String moldevId, CategoryType type, Pageable pageable) {
+        return postRepository.findPostCategoryInfoVos(moldevId, type, pageable);
     }
 
     public void deletePost(Long postId) {

@@ -10,7 +10,6 @@ import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.helper.PostHelper;
 import org.bootstrap.post.mapper.PostMapper;
-import org.bootstrap.post.utils.FrontUrlGenerator;
 import org.bootstrap.post.vo.PostCategoryInfoVo;
 import org.bootstrap.post.vo.PostDetailVo;
 import org.springframework.data.domain.Page;
@@ -28,8 +27,8 @@ public class PostService {
     private final PostMapper postMapper;
     private final PostHelper postHelper;
 
-    public PostsCategoryResponseDto getPostForCategory(Long memberId, CategoryType type, Pageable pageable) {
-        Page<PostCategoryInfoVo> postCategoryInfoVos = postHelper.findPostCategoryInfoVos(memberId, type, pageable);
+    public PostsCategoryResponseDto getPostForCategory(String moldevId, CategoryType type, Pageable pageable) {
+        Page<PostCategoryInfoVo> postCategoryInfoVos = postHelper.findPostCategoryInfoVos(moldevId, type, pageable);
         return postMapper.toPostsCategoryResponseDto(postCategoryInfoVos);
     }
 
@@ -41,8 +40,6 @@ public class PostService {
     public CreatePostResponseDto createPost(Long memberId, PostRequestDto requestDto, MultipartFile thumbnail) {
         String thumbnailString = postHelper.createStringThumbnail(thumbnail);
         Post post = createPostAndSave(memberId, requestDto, thumbnailString);
-        String frontendUrl = FrontUrlGenerator.createFrontUrl(post, requestDto.moldevId());
-        post.updateFrontUrl(frontendUrl);
         return postMapper.toCreatePostResponseDto(post);
     }
 
