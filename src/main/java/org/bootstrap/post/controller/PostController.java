@@ -51,8 +51,8 @@ public class PostController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<SuccessResponse<?>> updatePost(@PathVariable("id") final Long postId,
-                                                         @RequestPart final MultipartFile thumbnail,
-                                                         @RequestPart final PostRequestDto requestDto) {
+                                                         @RequestPart(required = false) final MultipartFile thumbnail,
+                                                         @RequestPart(required = false) final PostRequestDto requestDto) {
         postService.updatePost(postId, requestDto, thumbnail);
         return SuccessResponse.ok(null);
     }
