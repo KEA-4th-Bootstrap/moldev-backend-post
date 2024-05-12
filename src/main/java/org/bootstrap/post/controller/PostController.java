@@ -22,7 +22,7 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<SuccessResponse<?>> getPosts(@RequestHeader("id") final Long memberId,
-                                                       Pageable pageable) {
+                                                       final Pageable pageable) {
         final PostsResponseDto responseDto = postService.getPosts(memberId, pageable);
         return SuccessResponse.ok(responseDto);
     }
@@ -36,13 +36,13 @@ public class PostController {
     @GetMapping("/category")
     public ResponseEntity<SuccessResponse<?>> getPostForCategory(@RequestHeader("id") final Long memberId,
                                                                  @RequestParam final CategoryType type,
-                                                                 Pageable pageable) {
+                                                                 final Pageable pageable) {
         final PostsCategoryResponseDto responseDto = postService.getPostForCategory(memberId, type, pageable);
         return SuccessResponse.ok(responseDto);
     }
 
     @PostMapping
-    public ResponseEntity<SuccessResponse<?>> createPost(final Long memberId,
+    public ResponseEntity<SuccessResponse<?>> createPost(@RequestHeader("id") final Long memberId,
                                                          @RequestPart final MultipartFile thumbnail,
                                                          @RequestPart final PostRequestDto requestDto) {
         final CreatePostResponseDto responseDto = postService.createPost(memberId, requestDto, thumbnail);
