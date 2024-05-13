@@ -41,13 +41,6 @@ public class PostController {
         return SuccessResponse.ok(responseDto);
     }
 
-//    @GetMapping("/category")
-//    public ResponseEntity<SuccessResponse<?>> getPostForCategoryAndMoldevId(@RequestParam("id") final Long memberId,
-//                                                                          @RequestParam final CategoryType type) {
-//        final PostsCategoryResponseDto responseDto = postService.getPostForCategory(memberId, type);
-//        return SuccessResponse.ok(responseDto);
-//    }
-
     @PostMapping
     public ResponseEntity<SuccessResponse<?>> createPost(@RequestHeader("id") final Long memberId,
                                                          @RequestPart final MultipartFile thumbnail,
