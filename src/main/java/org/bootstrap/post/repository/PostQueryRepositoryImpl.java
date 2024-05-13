@@ -7,12 +7,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.entity.Post;
+import org.bootstrap.post.vo.CompositionCategoryPostVo;
 import org.bootstrap.post.vo.PostCategoryInfoVo;
 import org.bootstrap.post.vo.PostDetailVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-
 
 import java.util.List;
 
@@ -73,6 +73,38 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                 );
 
         return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchCount);
+    }
+
+    @Override
+    public List<CompositionCategoryPostVo> findCompositionCategoryPostVo(String moldevId, CategoryType type) {
+        return jpaQueryFactory
+                .select(Projections.constructor(CompositionCategoryPostVo.class,
+                        post.id,
+                        post.moldevId,
+                        post.title,
+                        post.content,
+                        post.thumbnail,
+                        post.category
+                ))
+                .from(post)
+                .where(
+                        eqMoldevId(moldevId),
+                        eqCategoryType(type)
+                )
+                .orderBy(post.id.desc())
+                .limit(2)
+                .fetch();
+    }
+
+    @Override
+    public Long findPostCountForUserAndCategory(String moldevId, CategoryType type) {
+        return jpaQueryFactory
+                .selectFrom(post)
+                .where(
+                        eqMoldevId(moldevId),
+                        eqCategoryType(type)
+                )
+                .fetchCount();
     }
 
     private BooleanExpression eqMemberId(Long memberId) {
