@@ -80,7 +80,6 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
         return jpaQueryFactory
                 .select(Projections.constructor(CompositionCategoryPostVo.class,
                         post.id,
-                        post.moldevId,
                         post.title,
                         post.content,
                         post.thumbnail,
