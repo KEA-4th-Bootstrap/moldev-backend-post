@@ -3,10 +3,7 @@ package org.bootstrap.post.controller;
 import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.common.SuccessResponse;
 import org.bootstrap.post.dto.request.PostRequestDto;
-import org.bootstrap.post.dto.response.CreatePostResponseDto;
-import org.bootstrap.post.dto.response.PostDetailResponseDto;
-import org.bootstrap.post.dto.response.PostsCategoryResponseDto;
-import org.bootstrap.post.dto.response.PostsResponseDto;
+import org.bootstrap.post.dto.response.*;
 import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.service.PostService;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +24,16 @@ public class PostController {
         return SuccessResponse.ok(responseDto);
     }
 
-    @GetMapping("/{id}/detail")
-    public ResponseEntity<SuccessResponse<?>> getPost(@PathVariable("id") final Long postId) {
-        final PostDetailResponseDto responseDto = postService.getPost(postId);
+    @GetMapping("/{postId}/detail")
+    public ResponseEntity<SuccessResponse<?>> getPostDetail(@PathVariable final Long postId) {
+        final PostDetailResponseDto responseDto = postService.getPostDetail(postId);
+        return SuccessResponse.ok(responseDto);
+    }
+
+    @GetMapping("/{postId}/category/list")
+    public ResponseEntity<SuccessResponse<?>> getSameCategoryPosts(@PathVariable final Long postId,
+                                                                   @RequestParam final CategoryType type) {
+        final SameCategoryPostsResponseDto responseDto = postService.getSameCategoryPosts(postId, type);
         return SuccessResponse.ok(responseDto);
     }
 
