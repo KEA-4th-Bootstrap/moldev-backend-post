@@ -6,6 +6,7 @@ import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.vo.CompositionCategoryPostVo;
 import org.bootstrap.post.vo.PostCategoryInfoVo;
 import org.bootstrap.post.vo.PostDetailVo;
+import org.bootstrap.post.vo.PostTitleAndDateVo;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -36,5 +37,9 @@ public class PostMapper {
     public CompositionCategoryPostResponseDto toCompositionCategoryPostResponseDto(List<CompositionCategoryPostVo> postInfo,
                                                                                    Long count) {
         return CompositionCategoryPostResponseDto.of(postInfo, count);
+    }
+
+    public SameCategoryPostsResponseDto toSameCategoryPostsResponseDto(List<PostTitleAndDateVo> postList, Long preCount, Long postCount) {
+        return SameCategoryPostsResponseDto.of(postList, (int) Math.ceil((double) (preCount - 2) / 5), (int) Math.ceil((double) (postCount - 2) / 5));
     }
 }
