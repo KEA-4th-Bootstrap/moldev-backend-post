@@ -1,12 +1,10 @@
 package org.bootstrap.post.mapper;
 
+import org.bootstrap.post.common.PageInfo;
 import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.dto.response.*;
 import org.bootstrap.post.entity.Post;
-import org.bootstrap.post.vo.CompositionCategoryPostVo;
-import org.bootstrap.post.vo.PostCategoryInfoVo;
-import org.bootstrap.post.vo.PostDetailVo;
-import org.bootstrap.post.vo.PostTitleAndDateVo;
+import org.bootstrap.post.vo.*;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +28,8 @@ public class PostMapper {
         return PostsResponseDto.of(postDetailVos);
     }
 
-    public PostsCategoryResponseDto toPostsCategoryResponseDto(Page<PostCategoryInfoVo> postCategoryInfoVos) {
-        return PostsCategoryResponseDto.of(postCategoryInfoVos);
+    public PostsCategoryResponseDto toPostsCategoryResponseDto(List<PostCategoryInfoWithRedisVo> postCategoryResponseDto, PageInfo pageInfo) {
+        return PostsCategoryResponseDto.of(postCategoryResponseDto, pageInfo);
     }
 
     public CompositionCategoryPostResponseDto toCompositionCategoryPostResponseDto(List<CompositionCategoryPostVo> postInfo,
