@@ -35,6 +35,7 @@ import java.util.*;
 @Service
 public class PostService {
     private final static long CRITERIA_CATEGORY_POST_COUNT = 2;
+    private final static String VIEW_COUNT = "viewCount";
     private final PostMapper postMapper;
     private final PostHelper postHelper;
     private final RedisUtils redisUtils;
@@ -102,13 +103,12 @@ public class PostService {
 
     public void viewCountUpByCookie(Long postId, HttpServletRequest request, HttpServletResponse response) {
         final String POST_ID = String.valueOf(postId);
-        ZSetOperations<String, String> zSetOperations = redisUtils.getZSetOperations();
 
         Cookie[] cookies = CookieUtils.getCookies(request);
         Cookie cookie = getViewCountCookieFromCookies(cookies);
 
         if (!cookie.getValue().contains(POST_ID)) {
-            zSetOperations.incrementScore("view_count", POST_ID, 1);
+            redisUtils.getZSetOperations().incrementScore(VIEW_COUNT, POST_ID, 1);
             cookie.setValue(cookie.getValue() + POST_ID);
         }
 
@@ -134,9 +134,9 @@ public class PostService {
 
     private Cookie getViewCountCookieFromCookies(Cookie[] cookies) {
         return Arrays.stream(cookies)
-                .filter(c -> c.getName().equals("viewCount"))
+                .filter(c -> c.getName().equals(VIEW_COUNT))
                 .findFirst()
-                .orElseGet(() -> CookieUtils.createCookie("viewCount", ""));
+                .orElseGet(() -> CookieUtils.createCookie(VIEW_COUNT, ""));
     }
 
     private int getMaxAge() {
@@ -146,10 +146,9 @@ public class PostService {
     }
 
     private List<PostCategoryInfoWithRedisVo> createPostCategoryInfoWithRedisVos(Page<PostCategoryInfoVo> postCategoryInfoVos) {
-        ZSetOperations<String, String> zSetOperations = redisUtils.getZSetOperations();
         return postCategoryInfoVos.stream()
                 .map(postCategoryInfoVo -> {
-                    Double viewCount = zSetOperations.score("viewCount", String.valueOf(postCategoryInfoVo.id()));
+                    Double viewCount = redisUtils.getZSetOperations().score(VIEW_COUNT, String.valueOf(postCategoryInfoVo.id()));
                     if (Objects.isNull(viewCount)) {
                         viewCount = 0.0;
                     }
