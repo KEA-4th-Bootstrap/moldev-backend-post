@@ -1,5 +1,8 @@
 package org.bootstrap.post.service;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.dto.response.*;
@@ -7,19 +10,26 @@ import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.helper.PostHelper;
 import org.bootstrap.post.mapper.PostMapper;
+import org.bootstrap.post.utils.CookieUtils;
+import org.bootstrap.post.utils.RedisUtils;
 import org.bootstrap.post.vo.PostCategoryInfoVo;
 import org.bootstrap.post.vo.PostDetailVo;
 import org.bootstrap.post.vo.PostTitleAndDateVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -28,6 +38,7 @@ public class PostService {
     private final static long CRITERIA_CATEGORY_POST_COUNT = 2;
     private final PostMapper postMapper;
     private final PostHelper postHelper;
+    private final RedisUtils redisUtils;
 
     public SameCategoryPostsResponseDto getSameCategoryPosts(Long postId, CategoryType type) {
         Long preCount = postHelper.countPostsBeforeCurrentId(postId, type);
@@ -87,6 +98,22 @@ public class PostService {
         return postHelper.findPostsAfterCurrentId(postId, type, requestAfterCount);
     }
 
+    public void viewCountUpByCookie(Long postId, HttpServletRequest request, HttpServletResponse response) {
+        final String POST_ID = String.valueOf(postId);
+        ValueOperations<String, String> valueOperations = redisUtils.getValueOperations();
+
+        Cookie[] cookies = CookieUtils.getCookies(request);
+        Cookie cookie = getViewCountCookieFromCookies(cookies);
+
+        if (!cookie.getValue().contains(POST_ID)) {
+            valueOperations.increment(POST_ID, 1L);
+            cookie.setValue(cookie.getValue() + POST_ID);
+        }
+
+        int maxAge = getMaxAge();
+        CookieUtils.addCookieWithMaxAge(response, cookie, maxAge);
+    }
+
     private void checkThumbnailAndUpdate(MultipartFile thumbnail, Post post) {
         if (!Objects.isNull(thumbnail)) {
             String thumbnailString = postHelper.createStringThumbnail(thumbnail);
@@ -94,7 +121,25 @@ public class PostService {
         }
     }
 
+    public PostDetailResponseDto getPost(Long postId) {
+        Post post = postHelper.findPostOrThrow(postId);
+        return postMapper.toPostDetailResponseDto(post);
+    }
+
     public void deletePost(Long postId) {
         postHelper.deletePost(postId);
+    }
+
+    private Cookie getViewCountCookieFromCookies(Cookie[] cookies) {
+        return Arrays.stream(cookies)
+                .filter(c -> c.getName().equals("viewCount"))
+                .findFirst()
+                .orElseGet(() -> CookieUtils.createCookie("viewCount", ""));
+    }
+
+    private int getMaxAge() {
+        long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
+        long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        return (int) (todayEndSecond - currentSecond);
     }
 }

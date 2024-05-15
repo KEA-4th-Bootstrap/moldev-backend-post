@@ -1,5 +1,7 @@
 package org.bootstrap.post.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.common.SuccessResponse;
 import org.bootstrap.post.dto.request.PostRequestDto;
@@ -64,6 +66,14 @@ public class PostController {
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessResponse<?>> deletePost(@PathVariable("id") final Long postId) {
         postService.deletePost(postId);
+        return SuccessResponse.ok(null);
+    }
+
+    @PostMapping("/view/{memberId}")
+    public ResponseEntity<SuccessResponse<?>> viewCountUp(@PathVariable Long memberId,
+                                                          HttpServletRequest request,
+                                                          HttpServletResponse response){
+        postService.viewCountUpByCookie(memberId, request, response);
         return SuccessResponse.ok(null);
     }
 }
