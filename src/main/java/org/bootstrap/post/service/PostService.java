@@ -4,6 +4,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.bootstrap.post.common.PageInfo;
 import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.dto.response.*;
 import org.bootstrap.post.entity.CategoryType;
@@ -13,11 +14,12 @@ import org.bootstrap.post.mapper.PostMapper;
 import org.bootstrap.post.utils.CookieUtils;
 import org.bootstrap.post.utils.RedisUtils;
 import org.bootstrap.post.vo.PostCategoryInfoVo;
+import org.bootstrap.post.vo.PostCategoryInfoWithRedisVo;
 import org.bootstrap.post.vo.PostDetailVo;
 import org.bootstrap.post.vo.PostTitleAndDateVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,10 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Transactional
@@ -49,12 +48,15 @@ public class PostService {
         postsBeforeCurrentId.add(currentPost);
         postsBeforeCurrentId.addAll(postsAfterCurrentId);
         postsBeforeCurrentId.sort(Comparator.comparingLong(PostTitleAndDateVo::id));
-        return postMapper.toSameCategoryPostsResponseDto(postsBeforeCurrentId, preCount, postCount );
+        return postMapper.toSameCategoryPostsResponseDto(postsBeforeCurrentId, preCount, postCount);
     }
 
     public PostsCategoryResponseDto getPostForCategory(String moldevId, CategoryType type, Pageable pageable) {
         Page<PostCategoryInfoVo> postCategoryInfoVos = postHelper.findPostCategoryInfoVos(moldevId, type, pageable);
-        return postMapper.toPostsCategoryResponseDto(postCategoryInfoVos);
+        List<PostCategoryInfoWithRedisVo> postCategoryInfoWithRedisVos = createPostCategoryInfoWithRedisVos(postCategoryInfoVos);
+
+        PageInfo pageInfo = PageInfo.of(postCategoryInfoVos);
+        return postMapper.toPostsCategoryResponseDto(postCategoryInfoWithRedisVos, pageInfo);
     }
 
     public PostDetailResponseDto getPostDetail(Long postId) {
@@ -100,13 +102,13 @@ public class PostService {
 
     public void viewCountUpByCookie(Long postId, HttpServletRequest request, HttpServletResponse response) {
         final String POST_ID = String.valueOf(postId);
-        ValueOperations<String, String> valueOperations = redisUtils.getValueOperations();
+        ZSetOperations<String, String> zSetOperations = redisUtils.getZSetOperations();
 
         Cookie[] cookies = CookieUtils.getCookies(request);
         Cookie cookie = getViewCountCookieFromCookies(cookies);
 
         if (!cookie.getValue().contains(POST_ID)) {
-            valueOperations.increment(POST_ID, 1L);
+            zSetOperations.incrementScore("view_count", POST_ID, 1);
             cookie.setValue(cookie.getValue() + POST_ID);
         }
 
@@ -141,5 +143,18 @@ public class PostService {
         long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
         long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
         return (int) (todayEndSecond - currentSecond);
+    }
+
+    private List<PostCategoryInfoWithRedisVo> createPostCategoryInfoWithRedisVos(Page<PostCategoryInfoVo> postCategoryInfoVos) {
+        ZSetOperations<String, String> zSetOperations = redisUtils.getZSetOperations();
+        return postCategoryInfoVos.stream()
+                .map(postCategoryInfoVo -> {
+                    Double viewCount = zSetOperations.score("viewCount", String.valueOf(postCategoryInfoVo.id()));
+                    if (Objects.isNull(viewCount)) {
+                        viewCount = 0.0;
+                    }
+                    return new PostCategoryInfoWithRedisVo(postCategoryInfoVo, viewCount.intValue());
+                })
+                .toList();
     }
 }
