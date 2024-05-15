@@ -7,6 +7,7 @@ public record PostCategoryInfoVo(
         Long id,
         String title,
         String content,
-        String thumbnail
+        String thumbnail,
+        Integer viewCount
 ) {
 }
