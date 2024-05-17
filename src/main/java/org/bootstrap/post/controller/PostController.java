@@ -69,11 +69,11 @@ public class PostController {
         return SuccessResponse.ok(null);
     }
 
-    @PostMapping("/view/{memberId}")
-    public ResponseEntity<SuccessResponse<?>> viewCountUp(@PathVariable Long memberId,
+    @PostMapping("/view/{postId}")
+    public ResponseEntity<SuccessResponse<?>> viewCountUp(@PathVariable Long postId,
                                                           HttpServletRequest request,
                                                           HttpServletResponse response){
-        postService.viewCountUpByCookie(memberId, request, response);
+        postService.viewCountUpByCookie(postId, request, response);
         return SuccessResponse.ok(null);
     }
 }
