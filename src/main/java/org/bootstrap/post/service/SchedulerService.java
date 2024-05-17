@@ -34,11 +34,7 @@ public class SchedulerService {
         List<Long> keys = getKeyList(viewCountKeys);
         List<Post> posts = getExistPostsByKeys(keys);
 
-        posts.stream()
-                .peek(this::updatePostViewCount)
-                .collect(Collectors.toList());
-
-        postRepository.saveAll(posts);
+        posts.forEach(this::updatePostViewCount);
     }
 
     private void updatePostViewCount(Post post) {
