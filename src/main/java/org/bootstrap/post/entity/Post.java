@@ -27,6 +27,8 @@ public class Post extends BaseTimeEntity {
     @Convert(converter = CategoryTypeConverter.class)
     private CategoryType category;
     private String moldevId;
+    @Builder.Default
+    private Integer viewCount = 0;
 
     public static Post createPost(PostRequestDto requestDto, Long memberId, String thumbnail) {
         return Post.builder()
@@ -47,5 +49,9 @@ public class Post extends BaseTimeEntity {
 
     public void updateThumbnail(String thumbnail) {
         this.thumbnail = updateValue(this.thumbnail, thumbnail);
+    }
+
+    public void updateViewCount(Integer viewCount){
+        this.viewCount = viewCount;
     }
 }

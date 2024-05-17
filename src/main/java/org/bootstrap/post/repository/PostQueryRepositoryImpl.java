@@ -32,7 +32,8 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         post.title,
                         post.content,
                         post.thumbnail,
-                        post.category
+                        post.category,
+                        post.viewCount
                 ))
                 .from(post)
                 .where(
@@ -57,7 +58,8 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         post.id,
                         post.title,
                         post.content,
-                        post.thumbnail
+                        post.thumbnail,
+                        post.viewCount
                 ))
                 .from(post)
                 .where(
@@ -85,7 +87,8 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         post.title,
                         post.content,
                         post.thumbnail,
-                        post.category
+                        post.category,
+                        post.viewCount
                 ))
                 .from(post)
                 .where(

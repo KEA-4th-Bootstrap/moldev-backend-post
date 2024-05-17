@@ -9,6 +9,7 @@ public record CompositionCategoryPostVo(
         String title,
         String content,
         String thumbnail,
-        CategoryType category
+        CategoryType category,
+        Integer viewCount
 ) {
 }

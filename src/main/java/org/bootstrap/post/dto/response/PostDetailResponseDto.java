@@ -11,7 +11,8 @@ public record PostDetailResponseDto(
         String title,
         String content,
         String thumbnail,
-        String category
+        String category,
+        Integer viewCount
 ) {
     public static PostDetailResponseDto of (Post post) {
         return PostDetailResponseDto.builder()
@@ -21,6 +22,7 @@ public record PostDetailResponseDto(
                 .content(post.getContent())
                 .thumbnail(post.getThumbnail())
                 .category(post.getCategory().getDesc())
+                .viewCount(post.getViewCount())
                 .build();
     }
 }

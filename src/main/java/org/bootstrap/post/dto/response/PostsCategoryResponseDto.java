@@ -3,20 +3,19 @@ package org.bootstrap.post.dto.response;
 import lombok.AccessLevel;
 import lombok.Builder;
 import org.bootstrap.post.common.PageInfo;
-import org.bootstrap.post.vo.PostCategoryInfoVo;
-import org.springframework.data.domain.Page;
+import org.bootstrap.post.vo.PostCategoryInfoWithRedisVo;
 
 import java.util.List;
 
 @Builder(access = AccessLevel.PRIVATE)
 public record PostsCategoryResponseDto(
-        List<PostCategoryInfoVo> postList,
+        List<PostCategoryInfoWithRedisVo> postList,
         PageInfo pageInfo
 ) {
-    public static PostsCategoryResponseDto of(Page<PostCategoryInfoVo> postList) {
+    public static PostsCategoryResponseDto of(List<PostCategoryInfoWithRedisVo> postList, PageInfo pageInfo) {
         return PostsCategoryResponseDto.builder()
-                .postList(postList.getContent())
-                .pageInfo(PageInfo.of(postList))
+                .postList(postList)
+                .pageInfo(pageInfo)
                 .build();
     }
 }
