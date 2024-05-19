@@ -31,7 +31,7 @@ import java.util.*;
 @Service
 public class PostService {
     private final static long CRITERIA_CATEGORY_POST_COUNT = 2;
-    private final static String VIEW_COUNT = "viewCount";
+    private final static String POST_VIEW_COUNT = "post_view_count";
     private final PostMapper postMapper;
     private final PostHelper postHelper;
     private final RedisUtils redisUtils;
@@ -104,7 +104,7 @@ public class PostService {
         Cookie cookie = getViewCountCookieFromCookies(cookies);
 
         if (!cookie.getValue().contains(POST_ID)) {
-            redisUtils.getZSetOperations().incrementScore(VIEW_COUNT, POST_ID, 1);
+            redisUtils.getZSetOperations().incrementScore(POST_VIEW_COUNT, POST_ID, 1);
             cookie.setValue(cookie.getValue() + POST_ID);
         }
 
@@ -130,9 +130,9 @@ public class PostService {
 
     private Cookie getViewCountCookieFromCookies(Cookie[] cookies) {
         return Arrays.stream(cookies)
-                .filter(c -> c.getName().equals(VIEW_COUNT))
+                .filter(c -> c.getName().equals(POST_VIEW_COUNT))
                 .findFirst()
-                .orElseGet(() -> CookieUtils.createCookie(VIEW_COUNT, ""));
+                .orElseGet(() -> CookieUtils.createCookie(POST_VIEW_COUNT, ""));
     }
 
     private int getMaxAge() {
@@ -144,7 +144,7 @@ public class PostService {
     private List<PostCategoryInfoWithRedisVo> createPostCategoryInfoWithRedisVos(Page<PostCategoryInfoVo> postCategoryInfoVos) {
         return postCategoryInfoVos.stream()
                 .map(postCategoryInfoVo -> {
-                    Double viewCount = redisUtils.getZSetOperations().score(VIEW_COUNT, String.valueOf(postCategoryInfoVo.id()));
+                    Double viewCount = redisUtils.getZSetOperations().score(POST_VIEW_COUNT, String.valueOf(postCategoryInfoVo.id()));
                     if (Objects.isNull(viewCount)) {
                         viewCount = 0.0;
                     }
@@ -154,7 +154,7 @@ public class PostService {
     }
 
     public TrendingPostsResponseDto getTrendingPosts() {
-        Set<Long> trendingPostIds = redisUtils.getTrendingPostIds(VIEW_COUNT, 18, 0L);
+        Set<Long> trendingPostIds = redisUtils.getTrendingPostIds(POST_VIEW_COUNT, 18, 0L);
         List<PostDetailVo> postDetailVosByPostIds = postHelper.findTrendingPostDetailVos(trendingPostIds);
         List<PostDetailWithRedisVo> postDetailWithRedisVos = createPostDetailWithRedisVos(postDetailVosByPostIds);
         return postMapper.toTrendingPostsResponseDto(postDetailWithRedisVos);
@@ -163,7 +163,7 @@ public class PostService {
     private List<PostDetailWithRedisVo> createPostDetailWithRedisVos(List<PostDetailVo> postDetailVos) {
         return postDetailVos.stream()
                 .map(postDetailVo -> {
-                    Double viewCount = redisUtils.getZSetOperations().score(VIEW_COUNT, String.valueOf(postDetailVo.id()));
+                    Double viewCount = redisUtils.getZSetOperations().score(POST_VIEW_COUNT, String.valueOf(postDetailVo.id()));
                     if (Objects.isNull(viewCount)) {
                         viewCount = 0.0;
                     }
