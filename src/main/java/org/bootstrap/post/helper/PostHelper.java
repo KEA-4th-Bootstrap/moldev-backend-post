@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Component
@@ -43,6 +44,10 @@ public class PostHelper {
 
     public Page<PostCategoryInfoVo> findPostCategoryInfoVos(String moldevId, CategoryType type, Pageable pageable) {
         return postRepository.findPostCategoryInfoVos(moldevId, type, pageable);
+    }
+
+    public List<PostDetailVo> findTrendingPostDetailVos(Set<Long> postIds) {
+        return postRepository.findTrendingPostDetailVos(postIds);
     }
 
     public List<CompositionCategoryPostVo> findCompositionCategoryPostVos(String moldevId, CategoryType type) {

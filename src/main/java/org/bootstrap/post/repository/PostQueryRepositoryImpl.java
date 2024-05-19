@@ -17,6 +17,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.bootstrap.post.entity.QPost.post;
 
@@ -49,6 +50,43 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                 );
 
         return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchCount);
+    }
+
+    @Override
+    public List<PostDetailVo> findTrendingPostDetailVos(Set<Long> postIds) {
+        List<PostDetailVo> trendingPosts = jpaQueryFactory
+                .select(Projections.constructor(PostDetailVo.class,
+                        post.id,
+                        post.title,
+                        post.content,
+                        post.thumbnail,
+                        post.category,
+                        post.viewCount
+                ))
+                .from(post)
+                .where(inPostIds(postIds))
+                .fetch();
+
+        if (trendingPosts.size() == 18) {
+            return trendingPosts;
+        }
+
+        List<PostDetailVo> recentPosts = jpaQueryFactory.select(Projections.constructor(PostDetailVo.class,
+                        post.id,
+                        post.title,
+                        post.content,
+                        post.thumbnail,
+                        post.category,
+                        post.viewCount
+                ))
+                .from(post)
+                .where(notInPostIds(postIds))
+                .orderBy(post.id.desc())
+                .limit(18 - trendingPosts.size())
+                .fetch();
+
+        trendingPosts.addAll(recentPosts);
+        return trendingPosts;
     }
 
     @Override
@@ -208,5 +246,13 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 
     private BooleanExpression ltPostId(Long postId) {
         return postId == null ? null : post.id.lt(postId);
+    }
+
+    private BooleanExpression inPostIds(Set<Long> postIds) {
+        return postIds == null ? null : post.id.in(postIds);
+    }
+
+    private BooleanExpression notInPostIds(Set<Long> postIds) {
+        return postIds == null ? null : post.id.notIn(postIds);
     }
 }

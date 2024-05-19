@@ -10,10 +10,12 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 public interface PostQueryRepository {
     Page<PostDetailVo> findPostDetailVos(Long memberId, Pageable pageable);
+    List<PostDetailVo> findTrendingPostDetailVos(Set<Long> postIds);
     Page<PostCategoryInfoVo> findPostCategoryInfoVos(String moldevId, CategoryType type, Pageable pageable);
     List<CompositionCategoryPostVo> findCompositionCategoryPostVo(String moldevId, CategoryType type);
     Long findPostCountForUserAndCategory(String moldevId, CategoryType type);

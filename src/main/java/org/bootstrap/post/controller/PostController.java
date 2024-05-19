@@ -76,4 +76,10 @@ public class PostController {
         postService.viewCountUpByCookie(postId, request, response);
         return SuccessResponse.ok(null);
     }
+
+    @GetMapping("/trend")
+    public ResponseEntity<SuccessResponse<?>> getTrendingPosts() {
+        final TrendingPostsResponseDto responseDto = postService.getTrendingPosts();
+        return SuccessResponse.ok(responseDto);
+    }
 }
