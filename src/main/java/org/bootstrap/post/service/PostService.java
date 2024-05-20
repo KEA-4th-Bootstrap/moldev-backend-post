@@ -169,7 +169,7 @@ public class PostService {
                     }
                     return new PostDetailWithRedisVo(postDetailVo, viewCount.intValue());
                 })
-                .sorted(Comparator.comparing(PostDetailWithRedisVo::getRedisViewCount).reversed())
+                .sorted(Comparator.comparing(PostDetailWithRedisVo::redisViewCount).reversed())
                 .toList();
     }
 }

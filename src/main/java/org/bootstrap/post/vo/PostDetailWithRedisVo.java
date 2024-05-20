@@ -6,7 +6,6 @@ import lombok.Getter;
 @Builder
 public record PostDetailWithRedisVo(
     PostDetailVo postInfo,
-    @Getter
     Integer redisViewCount
 ) {
 }
