@@ -32,7 +32,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         post.id,
                         post.moldevId,
                         post.title,
-                        post.content,
+                        post.profileContent,
                         post.thumbnail,
                         post.category,
                         post.viewCount
@@ -60,7 +60,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         post.id,
                         post.moldevId,
                         post.title,
-                        post.content,
+                        post.profileContent,
                         post.thumbnail,
                         post.category,
                         post.viewCount
@@ -77,7 +77,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         post.id,
                         post.moldevId,
                         post.title,
-                        post.content,
+                        post.profileContent,
                         post.thumbnail,
                         post.category,
                         post.viewCount
@@ -98,7 +98,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                 .select(Projections.constructor(PostCategoryInfoVo.class,
                         post.id,
                         post.title,
-                        post.content,
+                        post.profileContent,
                         post.thumbnail,
                         post.viewCount
                 ))
@@ -126,7 +126,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                 .select(Projections.constructor(CompositionCategoryPostVo.class,
                         post.id,
                         post.title,
-                        post.content,
+                        post.profileContent,
                         post.thumbnail,
                         post.category,
                         post.viewCount

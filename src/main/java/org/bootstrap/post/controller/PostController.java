@@ -45,8 +45,10 @@ public class PostController {
 
     @GetMapping("/{postId}/category/list")
     public ResponseEntity<SuccessResponse<?>> getSameCategoryPosts(@PathVariable final Long postId,
-                                                                   @RequestParam final CategoryType type) {
-        final SameCategoryPostsResponseDto responseDto = postService.getSameCategoryPosts(postId, type);
+                                                                   @RequestParam final CategoryType type,
+                                                                   @RequestParam final Integer preCount,
+                                                                   @RequestParam final Integer postCount) {
+        final SameCategoryPostsResponseDto responseDto = postService.getSameCategoryPosts(postId, type, preCount, postCount);
         return SuccessResponse.ok(responseDto);
     }
 
@@ -83,7 +85,7 @@ public class PostController {
     @PostMapping("/view/{postId}")
     public ResponseEntity<SuccessResponse<?>> viewCountUp(@PathVariable Long postId,
                                                           HttpServletRequest request,
-                                                          HttpServletResponse response){
+                                                          HttpServletResponse response) {
         postService.viewCountUpByCookie(postId, request, response);
         return SuccessResponse.ok(null);
     }

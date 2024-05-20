@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -58,7 +59,9 @@ public class PostHelper {
         return postRepository.findPostCountForUserAndCategory(moldevId, type);
     }
 
-    public PostTitleAndDateVo findPostTitleAndDateVoCurrentId(Long currentId, CategoryType type) {
+    public PostTitleAndDateVo findPostTitleAndDateVoCurrentId(Long currentId, CategoryType type, Integer preC, Integer postC) {
+        if (preC == 0 || postC == 0)
+            return null;
         return postRepository.findPostTitleAndDateVo(currentId, type)
                 .orElseThrow(() -> PostNotFoundException.EXCEPTION);
     }

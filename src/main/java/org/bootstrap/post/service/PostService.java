@@ -12,6 +12,7 @@ import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.helper.PostHelper;
 import org.bootstrap.post.mapper.PostMapper;
 import org.bootstrap.post.utils.CookieUtils;
+import org.bootstrap.post.utils.FrontUrlGenerator;
 import org.bootstrap.post.utils.RedisUtils;
 import org.bootstrap.post.vo.*;
 import org.springframework.data.domain.Page;
@@ -30,21 +31,18 @@ import java.util.*;
 @Transactional
 @Service
 public class PostService {
-    private final static long CRITERIA_CATEGORY_POST_COUNT = 2;
     private final static String POST_VIEW_COUNT = "post_view_count";
     private final PostMapper postMapper;
     private final PostHelper postHelper;
     private final RedisUtils redisUtils;
 
-    public SameCategoryPostsResponseDto getSameCategoryPosts(Long postId, CategoryType type) {
+    public SameCategoryPostsResponseDto getSameCategoryPosts(Long postId, CategoryType type, Integer preC, Integer postC) {
         Long preCount = postHelper.countPostsBeforeCurrentId(postId, type);
         Long postCount = postHelper.countPostsAfterCurrentId(postId, type);
-        List<PostTitleAndDateVo> postsBeforeCurrentId = getPostsBeforeCurrentId(postId, type, postCount);
-        List<PostTitleAndDateVo> postsAfterCurrentId = getPostsAfterCurrentId(postId, type, preCount);
-        PostTitleAndDateVo currentPost = postHelper.findPostTitleAndDateVoCurrentId(postId, type);
-        postsBeforeCurrentId.add(currentPost);
-        postsBeforeCurrentId.addAll(postsAfterCurrentId);
-        postsBeforeCurrentId.sort(Comparator.comparingLong(PostTitleAndDateVo::id));
+        List<PostTitleAndDateVo> postsBeforeCurrentId = getPostsBeforeCurrentId(postId, type, postCount, preC);
+        List<PostTitleAndDateVo> postsAfterCurrentId = getPostsAfterCurrentId(postId, type, preCount, postC);
+        PostTitleAndDateVo currentPost = postHelper.findPostTitleAndDateVoCurrentId(postId, type, preC, postC);
+        composePostResponseList(postsBeforeCurrentId, postsAfterCurrentId, currentPost);
         return postMapper.toSameCategoryPostsResponseDto(postsBeforeCurrentId, preCount, postCount);
     }
 
@@ -69,6 +67,8 @@ public class PostService {
     public CreatePostResponseDto createPost(Long memberId, PostRequestDto requestDto, MultipartFile thumbnail) {
         String thumbnailString = postHelper.createStringThumbnail(thumbnail);
         Post post = createPostAndSave(memberId, requestDto, thumbnailString);
+        String frontUrl = FrontUrlGenerator.createFrontUrl(post);
+        post.updateFrontUrl(frontUrl);
         return postMapper.toCreatePostResponseDto(post);
     }
 
@@ -83,18 +83,28 @@ public class PostService {
         checkThumbnailAndUpdate(thumbnail, post);
     }
 
-    private List<PostTitleAndDateVo> getPostsBeforeCurrentId(Long postId, CategoryType type, Long postCount) {
-        long requestBeforeCount = CRITERIA_CATEGORY_POST_COUNT;
-        if (postCount < CRITERIA_CATEGORY_POST_COUNT)
-            requestBeforeCount = CRITERIA_CATEGORY_POST_COUNT + (CRITERIA_CATEGORY_POST_COUNT - postCount);
+    private List<PostTitleAndDateVo> getPostsBeforeCurrentId(Long postId, CategoryType type, Long postCount, Integer preC) {
+        if (Objects.isNull(preC) || preC == 0) return new ArrayList<>();
+        long requestBeforeCount = preC;
+        if (postCount < preC)
+            requestBeforeCount = preC + (preC - postCount);
         return postHelper.findPostsBeforeCurrentId(postId, type, requestBeforeCount);
     }
 
-    private List<PostTitleAndDateVo> getPostsAfterCurrentId(Long postId, CategoryType type, Long preCount) {
-        long requestAfterCount = CRITERIA_CATEGORY_POST_COUNT;
-        if (preCount < CRITERIA_CATEGORY_POST_COUNT)
-            requestAfterCount = CRITERIA_CATEGORY_POST_COUNT + (CRITERIA_CATEGORY_POST_COUNT - preCount);
+    private List<PostTitleAndDateVo> getPostsAfterCurrentId(Long postId, CategoryType type, Long preCount, Integer postC) {
+        if (Objects.isNull(postC) || postC == 0) return new ArrayList<>();
+        long requestAfterCount = postC;
+        if (preCount < postC)
+            requestAfterCount = postC + (postC - preCount);
         return postHelper.findPostsAfterCurrentId(postId, type, requestAfterCount);
+    }
+
+    private void composePostResponseList(List<PostTitleAndDateVo> postsBeforeCurrentId,
+                                         List<PostTitleAndDateVo> postsAfterCurrentId,
+                                         PostTitleAndDateVo currentPost) {
+        if (!Objects.isNull(currentPost)) postsBeforeCurrentId.add(currentPost);
+        postsBeforeCurrentId.addAll(postsAfterCurrentId);
+        postsBeforeCurrentId.sort(Comparator.comparingLong(PostTitleAndDateVo::id));
     }
 
     public void viewCountUpByCookie(Long postId, HttpServletRequest request, HttpServletResponse response) {

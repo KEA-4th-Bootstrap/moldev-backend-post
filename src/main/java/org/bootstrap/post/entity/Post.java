@@ -5,7 +5,6 @@ import lombok.*;
 import org.bootstrap.post.common.BaseTimeEntity;
 import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.entity.converter.CategoryTypeConverter;
-import org.bootstrap.post.utils.EnumValueUtils;
 
 import static org.bootstrap.post.utils.EntityUpdateValueUtils.updateValue;
 
@@ -24,9 +23,11 @@ public class Post extends BaseTimeEntity {
     private String title;
     private String thumbnail;
     private String content;
+    private String profileContent;
     @Convert(converter = CategoryTypeConverter.class)
     private CategoryType category;
     private String moldevId;
+    private String frontUrl;
     @Builder.Default
     private Integer viewCount = 0;
 
@@ -34,8 +35,9 @@ public class Post extends BaseTimeEntity {
         return Post.builder()
                 .memberId(memberId)
                 .title(requestDto.title())
-                .category(EnumValueUtils.toEntityCode(CategoryType.class, requestDto.category()))
+                .category(requestDto.category())
                 .content(requestDto.content())
+                .profileContent(requestDto.profileContent())
                 .thumbnail(thumbnail)
                 .moldevId(requestDto.moldevId())
                 .build();
@@ -44,14 +46,19 @@ public class Post extends BaseTimeEntity {
     public void updatePost(PostRequestDto requestDto) {
         this.title = updateValue(this.title, requestDto.title());
         this.content = updateValue(this.content, requestDto.content());
-        this.category = updateValue(this.category, EnumValueUtils.toEntityCode(CategoryType.class, requestDto.category()));
+        this.category = updateValue(this.category, requestDto.category());
+        this.profileContent = updateValue(this.profileContent, requestDto.profileContent());
+    }
+
+    public void updateFrontUrl(String frontUrl) {
+        this.frontUrl = frontUrl;
     }
 
     public void updateThumbnail(String thumbnail) {
         this.thumbnail = updateValue(this.thumbnail, thumbnail);
     }
 
-    public void updateViewCount(Integer viewCount){
+    public void updateViewCount(Integer viewCount) {
         this.viewCount = viewCount;
     }
 }
