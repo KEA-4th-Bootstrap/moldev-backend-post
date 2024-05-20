@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 @Service
 public class SchedulerService {
 
-    private final static String VIEW_COUNT = "viewCount";
+    private final static String POST_VIEW_COUNT = "post_view_count";
     private final RedisUtils redisUtils;
     private final PostRepository postRepository;
 
     @Scheduled(cron = "0 0 0 * * *")
     public void scheduleViewCount() {
-        Optional.ofNullable(redisUtils.getZSetOperations().range(VIEW_COUNT, 0, -1))
+        Optional.ofNullable(redisUtils.getZSetOperations().range(POST_VIEW_COUNT, 0, -1))
                 .ifPresent(this::processKeys);
     }
 
@@ -40,9 +40,9 @@ public class SchedulerService {
     private void updatePostViewCount(Post post) {
         String member = String.valueOf(post.getId());
         ZSetOperations<String, String> zSetOperations = redisUtils.getZSetOperations();
-        Double viewCount = Objects.requireNonNull(zSetOperations.score(VIEW_COUNT, member));
+        Double viewCount = Objects.requireNonNull(zSetOperations.score(POST_VIEW_COUNT, member));
         post.updateViewCount(post.getViewCount() + viewCount.intValue());
-        zSetOperations.remove(VIEW_COUNT, member);
+        zSetOperations.remove(POST_VIEW_COUNT, member);
     }
 
     private List<Post> getExistPostsByKeys(List<Long> keys) {
