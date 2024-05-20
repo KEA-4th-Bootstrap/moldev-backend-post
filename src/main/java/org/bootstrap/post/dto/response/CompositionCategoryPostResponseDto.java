@@ -8,11 +8,10 @@ import java.util.List;
 
 @Builder(access = AccessLevel.PRIVATE)
 public record CompositionCategoryPostResponseDto(
-        List<CompositionCategoryPostVo> postInfo,
+        List<CompositionPostWithViewCountResponseDto> postInfo,
         Long count
-
 ) {
-    public static CompositionCategoryPostResponseDto of(List<CompositionCategoryPostVo> postInfo,
+    public static CompositionCategoryPostResponseDto of(List<CompositionPostWithViewCountResponseDto> postInfo,
                                                         Long count) {
         return CompositionCategoryPostResponseDto.builder()
                 .postInfo(postInfo)

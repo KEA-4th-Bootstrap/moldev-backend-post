@@ -36,12 +36,17 @@ public class PostMapper {
         return TrendingPostsResponseDto.of(postList);
     }
 
-    public CompositionCategoryPostResponseDto toCompositionCategoryPostResponseDto(List<CompositionCategoryPostVo> postInfo,
+    public CompositionCategoryPostResponseDto toCompositionCategoryPostResponseDto(List<CompositionPostWithViewCountResponseDto> postInfo,
                                                                                    Long count) {
         return CompositionCategoryPostResponseDto.of(postInfo, count);
     }
 
     public SameCategoryPostsResponseDto toSameCategoryPostsResponseDto(List<PostTitleAndDateVo> postList, Long preCount, Long postCount) {
         return SameCategoryPostsResponseDto.of(postList, (int) Math.ceil((double) (preCount - 2) / 5), (int) Math.ceil((double) (postCount - 2) / 5));
+    }
+
+    public CompositionPostWithViewCountResponseDto toCompositionPostWithViewCountResponseDto(CompositionCategoryPostVo postInfo,
+                                                                                             Integer redisViewCount) {
+        return CompositionPostWithViewCountResponseDto.of(postInfo, redisViewCount);
     }
 }
