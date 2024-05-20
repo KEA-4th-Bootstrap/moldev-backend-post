@@ -7,8 +7,10 @@ import org.bootstrap.post.common.SuccessResponse;
 import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.dto.response.*;
 import org.bootstrap.post.entity.CategoryType;
+import org.bootstrap.post.service.PostCompositionService;
 import org.bootstrap.post.service.PostService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class PostController {
     private final PostService postService;
+    private final PostCompositionService postCompositionService;
 
     @GetMapping("/{id}")
     public ResponseEntity<SuccessResponse<?>> getPosts(@RequestHeader("id") final Long memberId,
@@ -30,6 +33,14 @@ public class PostController {
     public ResponseEntity<SuccessResponse<?>> getPostDetail(@PathVariable final Long postId) {
         final PostDetailResponseDto responseDto = postService.getPostDetail(postId);
         return SuccessResponse.ok(responseDto);
+    }
+
+    @GetMapping("/{moldevId}/category")
+    public ResponseEntity<CompositionCategoryPostResponseDto> getCompositionPostForCategory(@PathVariable final String moldevId,
+                                                                                            @RequestParam final CategoryType type) {
+        final CompositionCategoryPostResponseDto responseDto
+                = postCompositionService.getPostForCategoryAndMoldevId(moldevId, type);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @GetMapping("/{postId}/category/list")
