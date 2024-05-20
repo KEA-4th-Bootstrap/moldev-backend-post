@@ -30,6 +30,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
         List<PostDetailVo> contents = jpaQueryFactory
                 .select(Projections.constructor(PostDetailVo.class,
                         post.id,
+                        post.moldevId,
                         post.title,
                         post.content,
                         post.thumbnail,
@@ -57,6 +58,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
         List<PostDetailVo> trendingPosts = jpaQueryFactory
                 .select(Projections.constructor(PostDetailVo.class,
                         post.id,
+                        post.moldevId,
                         post.title,
                         post.content,
                         post.thumbnail,
@@ -73,6 +75,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
 
         List<PostDetailVo> recentPosts = jpaQueryFactory.select(Projections.constructor(PostDetailVo.class,
                         post.id,
+                        post.moldevId,
                         post.title,
                         post.content,
                         post.thumbnail,
