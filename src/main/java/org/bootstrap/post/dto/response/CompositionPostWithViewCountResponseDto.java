@@ -5,6 +5,8 @@ import lombok.Builder;
 import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.vo.CompositionCategoryPostVo;
 
+import java.time.LocalDateTime;
+
 @Builder(access = AccessLevel.PRIVATE)
 public record CompositionPostWithViewCountResponseDto(
         Long id,
@@ -12,7 +14,8 @@ public record CompositionPostWithViewCountResponseDto(
         String content,
         String thumbnail,
         CategoryType category,
-        Integer viewCount
+        Integer viewCount,
+        LocalDateTime updatedDate
 ) {
     public static CompositionPostWithViewCountResponseDto of(CompositionCategoryPostVo postInfo,
                                                              Integer redisCount) {
@@ -23,6 +26,7 @@ public record CompositionPostWithViewCountResponseDto(
                 .thumbnail(postInfo.thumbnail())
                 .category(postInfo.category())
                 .viewCount(postInfo.viewCount() + redisCount)
+                .updatedDate(postInfo.updatedDate())
                 .build();
     }
 }

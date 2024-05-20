@@ -12,6 +12,7 @@ public record CreatePostResponseDto(
         String title,
         String thumbnail,
         String content,
+        String frontUrl,
         LocalDateTime createdDate
 ) {
     public static CreatePostResponseDto of(Post post) {
@@ -19,7 +20,8 @@ public record CreatePostResponseDto(
                 .id(post.getId())
                 .title(post.getTitle())
                 .thumbnail(post.getThumbnail())
-                .content(post.getContent())
+                .content(post.getProfileContent())
+                .frontUrl(post.getFrontUrl())
                 .createdDate(post.getCreateDate())
                 .build();
     }

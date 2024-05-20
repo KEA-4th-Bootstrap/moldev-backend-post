@@ -3,6 +3,8 @@ package org.bootstrap.post.vo;
 import lombok.Builder;
 import org.bootstrap.post.entity.CategoryType;
 
+import java.time.LocalDateTime;
+
 @Builder
 public record CompositionCategoryPostVo(
         Long id,
@@ -10,6 +12,7 @@ public record CompositionCategoryPostVo(
         String content,
         String thumbnail,
         CategoryType category,
-        Integer viewCount
+        Integer viewCount,
+        LocalDateTime updatedDate
 ) {
 }

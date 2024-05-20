@@ -129,7 +129,8 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         post.profileContent,
                         post.thumbnail,
                         post.category,
-                        post.viewCount
+                        post.viewCount,
+                        post.lastModifiedDate
                 ))
                 .from(post)
                 .where(
