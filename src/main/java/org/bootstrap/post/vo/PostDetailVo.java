@@ -6,6 +6,7 @@ import org.bootstrap.post.entity.CategoryType;
 @Builder
 public record PostDetailVo(
         Long id,
+        String moldevId,
         String title,
         String content,
         String thumbnail,

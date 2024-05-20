@@ -13,13 +13,9 @@ import org.bootstrap.post.helper.PostHelper;
 import org.bootstrap.post.mapper.PostMapper;
 import org.bootstrap.post.utils.CookieUtils;
 import org.bootstrap.post.utils.RedisUtils;
-import org.bootstrap.post.vo.PostCategoryInfoVo;
-import org.bootstrap.post.vo.PostCategoryInfoWithRedisVo;
-import org.bootstrap.post.vo.PostDetailVo;
-import org.bootstrap.post.vo.PostTitleAndDateVo;
+import org.bootstrap.post.vo.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -154,6 +150,26 @@ public class PostService {
                     }
                     return new PostCategoryInfoWithRedisVo(postCategoryInfoVo, viewCount.intValue());
                 })
+                .toList();
+    }
+
+    public TrendingPostsResponseDto getTrendingPosts() {
+        Set<Long> trendingPostIds = redisUtils.getTrendingPostIds(VIEW_COUNT, 18, 0L);
+        List<PostDetailVo> postDetailVosByPostIds = postHelper.findTrendingPostDetailVos(trendingPostIds);
+        List<PostDetailWithRedisVo> postDetailWithRedisVos = createPostDetailWithRedisVos(postDetailVosByPostIds);
+        return postMapper.toTrendingPostsResponseDto(postDetailWithRedisVos);
+    }
+
+    private List<PostDetailWithRedisVo> createPostDetailWithRedisVos(List<PostDetailVo> postDetailVos) {
+        return postDetailVos.stream()
+                .map(postDetailVo -> {
+                    Double viewCount = redisUtils.getZSetOperations().score(VIEW_COUNT, String.valueOf(postDetailVo.id()));
+                    if (Objects.isNull(viewCount)) {
+                        viewCount = 0.0;
+                    }
+                    return new PostDetailWithRedisVo(postDetailVo, viewCount.intValue());
+                })
+                .sorted(Comparator.comparing(PostDetailWithRedisVo::redisViewCount).reversed())
                 .toList();
     }
 }

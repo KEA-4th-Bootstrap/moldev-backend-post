@@ -32,6 +32,10 @@ public class PostMapper {
         return PostsCategoryResponseDto.of(postCategoryResponseDto, pageInfo);
     }
 
+    public TrendingPostsResponseDto toTrendingPostsResponseDto(List<PostDetailWithRedisVo> postList) {
+        return TrendingPostsResponseDto.of(postList);
+    }
+
     public CompositionCategoryPostResponseDto toCompositionCategoryPostResponseDto(List<CompositionCategoryPostVo> postInfo,
                                                                                    Long count) {
         return CompositionCategoryPostResponseDto.of(postInfo, count);
