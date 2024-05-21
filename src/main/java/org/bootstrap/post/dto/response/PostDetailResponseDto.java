@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import org.bootstrap.post.entity.Post;
 
+import java.time.LocalDateTime;
+
 @Builder(access = AccessLevel.PRIVATE)
 public record PostDetailResponseDto(
         Long id,
@@ -12,9 +14,10 @@ public record PostDetailResponseDto(
         String content,
         String thumbnail,
         String category,
+        LocalDateTime lastModifiedDate,
         Integer viewCount
 ) {
-    public static PostDetailResponseDto of (Post post) {
+    public static PostDetailResponseDto of(Post post) {
         return PostDetailResponseDto.builder()
                 .id(post.getId())
                 .memberId(post.getMemberId())
@@ -22,6 +25,7 @@ public record PostDetailResponseDto(
                 .content(post.getContent())
                 .thumbnail(post.getThumbnail())
                 .category(post.getCategory().getDesc())
+                .lastModifiedDate(post.getLastModifiedDate())
                 .viewCount(post.getViewCount())
                 .build();
     }
