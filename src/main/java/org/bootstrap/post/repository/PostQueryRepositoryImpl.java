@@ -1,7 +1,9 @@
 package org.bootstrap.post.repository;
 
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.vo.CompositionCategoryPostVo;
 import org.bootstrap.post.vo.PostCategoryInfoVo;
 import org.bootstrap.post.vo.PostDetailVo;
+import java.time.format.DateTimeFormatter;
 import org.bootstrap.post.vo.PostTitleAndDateVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +39,12 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         post.thumbnail,
                         post.category,
                         post.viewCount,
-                        post.lastModifiedDate
+                        ExpressionUtils.as(
+                                Expressions.stringTemplate(
+                                        "DATE_FORMAT({0}, '%Y-%m-%d %H:%i:%s')",
+                                        post.lastModifiedDate
+                                ), "lastModifiedDate"
+                        )
                 ))
                 .from(post)
                 .where(
@@ -65,7 +73,12 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         post.thumbnail,
                         post.category,
                         post.viewCount,
-                        post.lastModifiedDate
+                        ExpressionUtils.as(
+                                Expressions.stringTemplate(
+                                        "DATE_FORMAT({0}, '%Y-%m-%d %H:%i:%s')",
+                                        post.lastModifiedDate
+                                ), "lastModifiedDate"
+                        )
                 ))
                 .from(post)
                 .where(inPostIds(postIds))
@@ -83,7 +96,12 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         post.thumbnail,
                         post.category,
                         post.viewCount,
-                        post.lastModifiedDate
+                        ExpressionUtils.as(
+                                Expressions.stringTemplate(
+                                        "DATE_FORMAT({0}, '%Y-%m-%d %H:%i:%s')",
+                                        post.lastModifiedDate
+                                ), "lastModifiedDate"
+                        )
                 ))
                 .from(post)
                 .where(notInPostIds(postIds))

@@ -14,6 +14,6 @@ public record PostDetailVo(
         String thumbnail,
         CategoryType category,
         Integer viewCount,
-        LocalDateTime lastModifiedDate
+        String lastModifiedDate
 ) {
 }
