@@ -91,8 +91,8 @@ public class PostController {
     }
 
     @GetMapping("/trend")
-    public ResponseEntity<SuccessResponse<?>> getTrendingPosts() {
+    public ResponseEntity<TrendingPostsResponseDto> getTrendingPosts() {
         final TrendingPostsResponseDto responseDto = postService.getTrendingPosts();
-        return SuccessResponse.ok(responseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }
