@@ -2,6 +2,7 @@ package org.bootstrap.post.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.entity.Post;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ public record PostDetailResponseDto(
         String title,
         String content,
         String thumbnail,
-        String category,
+        CategoryType categoryType,
         LocalDateTime lastModifiedDate,
         Integer viewCount
 ) {
@@ -22,7 +23,7 @@ public record PostDetailResponseDto(
                 .title(post.getTitle())
                 .content(post.getContent())
                 .thumbnail(post.getThumbnail())
-                .category(post.getCategory().getDesc())
+                .categoryType(post.getCategory())
                 .lastModifiedDate(post.getLastModifiedDate())
                 .viewCount(post.getViewCount())
                 .build();
