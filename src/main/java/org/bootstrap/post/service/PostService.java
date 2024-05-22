@@ -49,7 +49,6 @@ public class PostService {
     public PostsCategoryResponseDto getPostForCategory(String moldevId, CategoryType type, Pageable pageable) {
         Page<PostCategoryInfoVo> postCategoryInfoVos = postHelper.findPostCategoryInfoVos(moldevId, type, pageable);
         List<PostCategoryInfoWithRedisVo> postCategoryInfoWithRedisVos = createPostCategoryInfoWithRedisVos(postCategoryInfoVos);
-
         PageInfo pageInfo = PageInfo.of(postCategoryInfoVos);
         return postMapper.toPostsCategoryResponseDto(postCategoryInfoWithRedisVos, pageInfo);
     }
@@ -129,11 +128,6 @@ public class PostService {
         }
     }
 
-    public PostDetailResponseDto getPost(Long postId) {
-        Post post = postHelper.findPostOrThrow(postId);
-        return postMapper.toPostDetailResponseDto(post);
-    }
-
     public void deletePost(Long postId) {
         postHelper.deletePost(postId);
     }
@@ -155,10 +149,8 @@ public class PostService {
         return postCategoryInfoVos.stream()
                 .map(postCategoryInfoVo -> {
                     Double viewCount = redisUtils.getZSetOperations().score(POST_VIEW_COUNT, String.valueOf(postCategoryInfoVo.id()));
-                    if (Objects.isNull(viewCount)) {
-                        viewCount = 0.0;
-                    }
-                    return new PostCategoryInfoWithRedisVo(postCategoryInfoVo, viewCount.intValue());
+                    Integer integerViewCount = Objects.isNull(viewCount) ? 0 : viewCount.intValue();
+                    return PostCategoryInfoWithRedisVo.of(postCategoryInfoVo, integerViewCount);
                 })
                 .toList();
     }
