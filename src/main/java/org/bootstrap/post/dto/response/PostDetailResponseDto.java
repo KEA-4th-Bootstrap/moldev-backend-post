@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Builder(access = AccessLevel.PRIVATE)
 public record PostDetailResponseDto(
         Long id,
-        Long memberId,
         String title,
         String content,
         String thumbnail,
@@ -20,7 +19,6 @@ public record PostDetailResponseDto(
     public static PostDetailResponseDto of(Post post) {
         return PostDetailResponseDto.builder()
                 .id(post.getId())
-                .memberId(post.getMemberId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .thumbnail(post.getThumbnail())

@@ -30,9 +30,9 @@ public class PostController {
     }
 
     @GetMapping("/{postId}/detail")
-    public ResponseEntity<SuccessResponse<?>> getPostDetail(@PathVariable final Long postId) {
+    public ResponseEntity<PostDetailResponseDto> getPostDetail(@PathVariable final Long postId) {
         final PostDetailResponseDto responseDto = postService.getPostDetail(postId);
-        return SuccessResponse.ok(responseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @GetMapping("/{moldevId}/category")
