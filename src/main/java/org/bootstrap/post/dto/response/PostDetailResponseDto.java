@@ -13,7 +13,7 @@ public record PostDetailResponseDto(
         String title,
         String content,
         String thumbnail,
-        CategoryType categoryType,
+        CategoryType category,
         LocalDateTime lastModifiedDate,
         Integer viewCount
 ) {
@@ -23,7 +23,7 @@ public record PostDetailResponseDto(
                 .title(post.getTitle())
                 .content(post.getContent())
                 .thumbnail(post.getThumbnail())
-                .categoryType(post.getCategory())
+                .category(post.getCategory())
                 .lastModifiedDate(post.getLastModifiedDate())
                 .viewCount(post.getViewCount())
                 .build();
