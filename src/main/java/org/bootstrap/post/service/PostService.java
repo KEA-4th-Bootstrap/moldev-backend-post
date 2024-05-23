@@ -10,6 +10,8 @@ import org.bootstrap.post.dto.response.*;
 import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.helper.PostHelper;
+import org.bootstrap.post.kafka.KafkaProducer;
+import org.bootstrap.post.kafka.dto.KafkaMessageDto;
 import org.bootstrap.post.mapper.PostMapper;
 import org.bootstrap.post.utils.CookieUtils;
 import org.bootstrap.post.utils.FrontUrlGenerator;
@@ -36,6 +38,8 @@ public class PostService {
     private final PostHelper postHelper;
     private final RedisUtils redisUtils;
 
+    private final KafkaProducer kafkaProducer;
+
     public SameCategoryPostsResponseDto getSameCategoryPosts(Long postId, CategoryType type, Integer preC, Integer postC) {
         Long preCount = postHelper.countPostsBeforeCurrentId(postId, type);
         Long postCount = postHelper.countPostsAfterCurrentId(postId, type);
@@ -55,6 +59,7 @@ public class PostService {
 
     public PostDetailResponseDto getPostDetail(Long postId) {
         Post post = postHelper.findPostOrThrow(postId);
+        kafkaProducer.send("update", KafkaMessageDto.update(post));
         return postMapper.toPostDetailResponseDto(post);
     }
 

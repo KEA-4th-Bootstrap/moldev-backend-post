@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.exception.PostNotFoundException;
+import org.bootstrap.post.kafka.KafkaProducer;
+import org.bootstrap.post.kafka.dto.KafkaMessageDto;
 import org.bootstrap.post.repository.PostRepository;
 import org.bootstrap.post.utils.S3Provider;
 import org.bootstrap.post.vo.CompositionCategoryPostVo;
@@ -26,12 +28,16 @@ public class PostHelper {
     private final PostRepository postRepository;
     private final S3Provider s3Provider;
 
+    private final KafkaProducer kafkaProducer;
+
     public String createStringThumbnail(MultipartFile multipartFile) {
         return s3Provider.uploadFile(multipartFile, IMAGE_TYPE);
     }
 
     public Post savePost(Post post) {
-        return postRepository.save(post);
+        Post savedPost = postRepository.save(post);
+        kafkaProducer.send("update", KafkaMessageDto.create(savedPost));
+        return savedPost;
     }
 
     public Page<PostDetailVo> findPostDetailVos(Long memberId, Pageable pageable) {
