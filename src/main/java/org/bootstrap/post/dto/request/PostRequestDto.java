@@ -6,6 +6,7 @@ public record PostRequestDto(
         String title,
         String content,
         String profileContent,
+        String thumbnail,
         CategoryType category,
         String moldevId
 ) {

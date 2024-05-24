@@ -12,8 +12,8 @@ import java.util.List;
 
 @Component
 public class PostMapper {
-    public Post toEntity(PostRequestDto requestDto, Long memberId, String thumbnail) {
-        return Post.createPost(requestDto, memberId, thumbnail);
+    public Post toEntity(PostRequestDto requestDto, Long memberId) {
+        return Post.createPost(requestDto, memberId);
     }
 
     public CreatePostResponseDto toCreatePostResponseDto(Post post) {

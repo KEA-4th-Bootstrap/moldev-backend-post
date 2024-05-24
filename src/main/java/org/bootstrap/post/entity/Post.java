@@ -31,14 +31,14 @@ public class Post extends BaseTimeEntity {
     @Builder.Default
     private Integer viewCount = 0;
 
-    public static Post createPost(PostRequestDto requestDto, Long memberId, String thumbnail) {
+    public static Post createPost(PostRequestDto requestDto, Long memberId) {
         return Post.builder()
                 .memberId(memberId)
                 .title(requestDto.title())
                 .category(requestDto.category())
                 .content(requestDto.content())
                 .profileContent(requestDto.profileContent())
-                .thumbnail(thumbnail)
+                .thumbnail(requestDto.thumbnail())
                 .moldevId(requestDto.moldevId())
                 .build();
     }
@@ -48,14 +48,11 @@ public class Post extends BaseTimeEntity {
         this.content = updateValue(this.content, requestDto.content());
         this.category = updateValue(this.category, requestDto.category());
         this.profileContent = updateValue(this.profileContent, requestDto.profileContent());
+        this.thumbnail = updateValue(this.thumbnail, requestDto.thumbnail());
     }
 
     public void updateFrontUrl(String frontUrl) {
         this.frontUrl = frontUrl;
-    }
-
-    public void updateThumbnail(String thumbnail) {
-        this.thumbnail = updateValue(this.thumbnail, thumbnail);
     }
 
     public void updateViewCount(Integer viewCount) {

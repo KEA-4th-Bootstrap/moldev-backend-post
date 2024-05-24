@@ -71,23 +71,25 @@ public class PostService {
         return postMapper.toPostsResponseDto(postDetailVos);
     }
 
-    public CreatePostResponseDto createPost(Long memberId, PostRequestDto requestDto, MultipartFile thumbnail) {
-        String thumbnailString = postHelper.createStringThumbnail(thumbnail);
-        Post post = createPostAndSave(memberId, requestDto, thumbnailString);
+    public CreatePostResponseDto createPost(Long memberId, PostRequestDto requestDto) {
+        Post post = createPostAndSave(memberId, requestDto);
         String frontUrl = FrontUrlGenerator.createFrontUrl(post);
         post.updateFrontUrl(frontUrl);
         return postMapper.toCreatePostResponseDto(post);
     }
 
-    private Post createPostAndSave(Long memberId, PostRequestDto requestDto, String thumbnail) {
-        Post post = postMapper.toEntity(requestDto, memberId, thumbnail);
+    public String createPostImage(MultipartFile thumbnail) {
+        return postHelper.createStringThumbnail(thumbnail);
+    }
+
+    private Post createPostAndSave(Long memberId, PostRequestDto requestDto) {
+        Post post = postMapper.toEntity(requestDto, memberId);
         return postHelper.savePost(post);
     }
 
-    public void updatePost(Long postId, PostRequestDto requestDto, MultipartFile thumbnail) {
+    public void updatePost(Long postId, PostRequestDto requestDto) {
         Post post = postHelper.findPostOrThrow(postId);
         post.updatePost(requestDto);
-        checkThumbnailAndUpdate(thumbnail, post);
     }
 
     private List<PostTitleAndDateVo> getPostsBeforeCurrentId(Long postId, CategoryType type, Long postCount, Integer preC) {
@@ -127,13 +129,6 @@ public class PostService {
 
         int maxAge = getMaxAge();
         CookieUtils.addCookieWithMaxAge(response, cookie, maxAge);
-    }
-
-    private void checkThumbnailAndUpdate(MultipartFile thumbnail, Post post) {
-        if (!Objects.isNull(thumbnail)) {
-            String thumbnailString = postHelper.createStringThumbnail(thumbnail);
-            post.updateThumbnail(thumbnailString);
-        }
     }
 
     public void deletePost(Long postId) {

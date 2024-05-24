@@ -64,17 +64,21 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<SuccessResponse<?>> createPost(@RequestHeader("id") final Long memberId,
-                                                         @RequestPart final MultipartFile thumbnail,
-                                                         @RequestPart final PostRequestDto requestDto) {
-        final CreatePostResponseDto responseDto = postService.createPost(memberId, requestDto, thumbnail);
+                                                         @RequestBody final PostRequestDto requestDto) {
+        final CreatePostResponseDto responseDto = postService.createPost(memberId, requestDto);
         return SuccessResponse.created(responseDto);
+    }
+
+    @PostMapping("/image")
+    public ResponseEntity<SuccessResponse<?>> createPostImage(@RequestPart final MultipartFile thumbnail) {
+        final String responseUrl = postService.createPostImage(thumbnail);
+        return SuccessResponse.created(responseUrl);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<SuccessResponse<?>> updatePost(@PathVariable("id") final Long postId,
-                                                         @RequestPart(required = false) final MultipartFile thumbnail,
                                                          @RequestPart(required = false) final PostRequestDto requestDto) {
-        postService.updatePost(postId, requestDto, thumbnail);
+        postService.updatePost(postId, requestDto);
         return SuccessResponse.ok(null);
     }
 
