@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RequestMapping("/api/post")
 @RestController
@@ -95,4 +97,11 @@ public class PostController {
         final TrendingPostsResponseDto responseDto = postService.getTrendingPosts();
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
+
+    @GetMapping("/{moldevId}/recents")
+    public ResponseEntity<List<RecentPostsResponseDto>> getRecentsPosts(@PathVariable String moldevId){
+        final List<RecentPostsResponseDto> responseDto = postService.getRecentsPosts(moldevId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
 }
