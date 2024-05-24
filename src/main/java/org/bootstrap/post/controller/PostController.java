@@ -99,8 +99,8 @@ public class PostController {
     }
 
     @GetMapping("/{moldevId}/recents")
-    public ResponseEntity<List<RecentPostsResponseDto>> getRecentsPosts(@PathVariable String moldevId){
-        final List<RecentPostsResponseDto> responseDto = postService.getRecentsPosts(moldevId);
+    public ResponseEntity<RecentPostsResponseListDto> getRecentsPosts(@PathVariable String moldevId){
+        final RecentPostsResponseListDto responseDto = postService.getRecentsPosts(moldevId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 

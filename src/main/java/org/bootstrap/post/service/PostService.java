@@ -183,10 +183,11 @@ public class PostService {
                 .toList();
     }
 
-    public List<RecentPostsResponseDto> getRecentsPosts(String moldevId){
+    public RecentPostsResponseListDto getRecentsPosts(String moldevId){
         List<Post> posts = postRepository.findTop3ByMoldevIdOrderByLastModifiedDateDesc(moldevId);
-        return posts.stream()
+        List<RecentPostsResponseDto> responseDtoList = posts.stream()
                 .map(post -> RecentPostsResponseDto.of(post.getTitle(), post.getLastModifiedDate().toString()))
                 .collect(Collectors.toList());
+        return RecentPostsResponseListDto.of(responseDtoList);
     }
 }
