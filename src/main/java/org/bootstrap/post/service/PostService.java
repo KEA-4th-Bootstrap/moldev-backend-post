@@ -13,6 +13,7 @@ import org.bootstrap.post.helper.PostHelper;
 import org.bootstrap.post.kafka.KafkaProducer;
 import org.bootstrap.post.kafka.dto.KafkaMessageDto;
 import org.bootstrap.post.mapper.PostMapper;
+import org.bootstrap.post.repository.PostRepository;
 import org.bootstrap.post.utils.CookieUtils;
 import org.bootstrap.post.utils.FrontUrlGenerator;
 import org.bootstrap.post.utils.RedisUtils;
@@ -28,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -39,6 +41,7 @@ public class PostService {
     private final RedisUtils redisUtils;
 
     private final KafkaProducer kafkaProducer;
+    private final PostRepository postRepository;
 
     public SameCategoryPostsResponseDto getSameCategoryPosts(Long postId, CategoryType type, Integer preC, Integer postC) {
         Long preCount = postHelper.countPostsBeforeCurrentId(postId, type);
@@ -178,5 +181,12 @@ public class PostService {
                 })
                 .sorted(Comparator.comparing(PostDetailWithRedisVo::redisViewCount).reversed())
                 .toList();
+    }
+
+    public List<RecentPostsResponseDto> getRecentsPosts(String moldevId){
+        List<Post> posts = postRepository.findTop3ByMoldevIdOrderByLastModifiedDateDesc(moldevId);
+        return posts.stream()
+                .map(post -> RecentPostsResponseDto.of(post.getTitle(), post.getLastModifiedDate().toString()))
+                .collect(Collectors.toList());
     }
 }
