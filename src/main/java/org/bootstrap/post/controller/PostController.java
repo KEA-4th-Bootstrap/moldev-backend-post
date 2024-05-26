@@ -25,7 +25,7 @@ public class PostController {
     private final PostCompositionService postCompositionService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<SuccessResponse<?>> getPosts(@RequestHeader("id") final Long memberId,
+    public ResponseEntity<SuccessResponse<?>> getPosts(@RequestHeader("Authorization") final Long memberId,
                                                        final Pageable pageable) {
         final PostsResponseDto responseDto = postService.getPosts(memberId, pageable);
         return SuccessResponse.ok(responseDto);
@@ -63,7 +63,7 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<SuccessResponse<?>> createPost(@RequestHeader("id") final Long memberId,
+    public ResponseEntity<SuccessResponse<?>> createPost(@RequestHeader("Authorization") final Long memberId,
                                                          @RequestBody final PostRequestDto requestDto) {
         final CreatePostResponseDto responseDto = postService.createPost(memberId, requestDto);
         return SuccessResponse.created(responseDto);
