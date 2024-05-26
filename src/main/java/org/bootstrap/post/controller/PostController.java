@@ -15,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @RequestMapping("/api/post")
 @RestController
@@ -77,7 +75,7 @@ public class PostController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<SuccessResponse<?>> updatePost(@PathVariable("id") final Long postId,
-                                                         @RequestPart(required = false) final PostRequestDto requestDto) {
+                                                         @RequestBody final PostRequestDto requestDto) {
         postService.updatePost(postId, requestDto);
         return SuccessResponse.ok(null);
     }
@@ -103,7 +101,7 @@ public class PostController {
     }
 
     @GetMapping("/{moldevId}/recents")
-    public ResponseEntity<RecentPostsResponseListDto> getRecentsPosts(@PathVariable String moldevId){
+    public ResponseEntity<RecentPostsResponseListDto> getRecentsPosts(@PathVariable String moldevId) {
         final RecentPostsResponseListDto responseDto = postService.getRecentsPosts(moldevId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
