@@ -61,6 +61,11 @@ public class PostService {
         return postMapper.toPostsCategoryResponseDto(postCategoryInfoWithRedisVos, pageInfo);
     }
 
+    public PostImagesResponseDto getPostImages(Long postId) {
+        PostImage postImage = postHelper.findPostImageOrThrow(postId);
+        return PostImagesResponseDto.of(postImage);
+    }
+
     public PostDetailResponseDto getPostDetail(Long postId) {
         Post post = postHelper.findPostOrThrow(postId);
         kafkaProducer.send("update", KafkaMessageDto.update(post));

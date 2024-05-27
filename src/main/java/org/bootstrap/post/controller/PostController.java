@@ -60,6 +60,12 @@ public class PostController {
         return SuccessResponse.ok(responseDto);
     }
 
+    @GetMapping("/{postId}/images")
+    public ResponseEntity<SuccessResponse<?>> getPostImages(@PathVariable final Long postId) {
+        final PostImagesResponseDto responseDto = postService.getPostImages(postId);
+        return SuccessResponse.ok(responseDto);
+    }
+
     @PostMapping
     public ResponseEntity<SuccessResponse<?>> createPost(@RequestHeader("Authorization") final Long memberId,
                                                          @RequestBody final PostRequestDto requestDto) {
