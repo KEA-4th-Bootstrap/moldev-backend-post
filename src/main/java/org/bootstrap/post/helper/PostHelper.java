@@ -38,9 +38,7 @@ public class PostHelper {
     }
 
     public Post savePost(Post post) {
-        Post savedPost = postRepository.save(post);
-        kafkaProducer.send("update", KafkaMessageDto.create(savedPost));
-        return savedPost;
+        return postRepository.save(post);
     }
 
     public PostImage savePostImage(PostImage postImage) {

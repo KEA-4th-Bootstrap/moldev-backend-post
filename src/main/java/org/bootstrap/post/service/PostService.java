@@ -83,6 +83,7 @@ public class PostService {
         PostImage postImage = createPostImageAndSave(post, requestDto);
         String frontUrl = FrontUrlGenerator.createFrontUrl(post);
         post.updateFrontUrl(frontUrl);
+        kafkaProducer.send("update", KafkaMessageDto.create(post));
         return postMapper.toCreatePostResponseDto(post, postImage);
     }
 
