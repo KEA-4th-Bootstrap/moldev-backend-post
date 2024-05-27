@@ -9,6 +9,7 @@ import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.dto.response.*;
 import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.entity.Post;
+import org.bootstrap.post.entity.PostImage;
 import org.bootstrap.post.helper.PostHelper;
 import org.bootstrap.post.kafka.KafkaProducer;
 import org.bootstrap.post.kafka.dto.KafkaMessageDto;
@@ -73,13 +74,21 @@ public class PostService {
 
     public CreatePostResponseDto createPost(Long memberId, PostRequestDto requestDto) {
         Post post = createPostAndSave(memberId, requestDto);
+        PostImage postImage = createPostImageAndSave(post, requestDto);
         String frontUrl = FrontUrlGenerator.createFrontUrl(post);
         post.updateFrontUrl(frontUrl);
-        return postMapper.toCreatePostResponseDto(post);
+        return postMapper.toCreatePostResponseDto(post, postImage);
     }
 
     public String createPostImage(MultipartFile thumbnail) {
         return postHelper.createStringThumbnail(thumbnail);
+    }
+
+    public void updatePost(Long postId, PostRequestDto requestDto) {
+        Post post = postHelper.findPostOrThrow(postId);
+        PostImage postImage = postHelper.findPostImageOrThrow(post.getId());
+        post.updatePost(requestDto);
+        postImage.updateImages(requestDto.images());
     }
 
     private Post createPostAndSave(Long memberId, PostRequestDto requestDto) {
@@ -87,9 +96,9 @@ public class PostService {
         return postHelper.savePost(post);
     }
 
-    public void updatePost(Long postId, PostRequestDto requestDto) {
-        Post post = postHelper.findPostOrThrow(postId);
-        post.updatePost(requestDto);
+    private PostImage createPostImageAndSave(Post post, PostRequestDto postRequestDto) {
+        PostImage postImage = postMapper.toPostImage(post, postRequestDto);
+        return postHelper.savePostImage(postImage);
     }
 
     private List<PostTitleAndDateVo> getPostsBeforeCurrentId(Long postId, CategoryType type, Long postCount, Integer preC) {
@@ -178,7 +187,7 @@ public class PostService {
                 .toList();
     }
 
-    public RecentPostsResponseListDto getRecentsPosts(String moldevId){
+    public RecentPostsResponseListDto getRecentsPosts(String moldevId) {
         List<Post> posts = postRepository.findTop3ByMoldevIdOrderByLastModifiedDateDesc(moldevId);
         List<RecentPostsResponseDto> responseDtoList = posts.stream()
                 .map(post -> RecentPostsResponseDto.of(post.getTitle(), post.getLastModifiedDate().toString()))

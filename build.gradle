@@ -52,6 +52,9 @@ dependencies {
 
     // aws
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
+
+    // mongoDB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 }
 
 tasks.named('bootBuildImage') {

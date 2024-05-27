@@ -1,11 +1,14 @@
 package org.bootstrap.post.helper;
 
 import lombok.RequiredArgsConstructor;
+import org.bootstrap.post.dto.request.PostImageRequestDto;
 import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.entity.Post;
+import org.bootstrap.post.entity.PostImage;
 import org.bootstrap.post.exception.PostNotFoundException;
 import org.bootstrap.post.kafka.KafkaProducer;
 import org.bootstrap.post.kafka.dto.KafkaMessageDto;
+import org.bootstrap.post.mongorepository.PostMongoRepository;
 import org.bootstrap.post.repository.PostRepository;
 import org.bootstrap.post.utils.S3Provider;
 import org.bootstrap.post.vo.CompositionCategoryPostVo;
@@ -17,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +28,7 @@ import java.util.Set;
 public class PostHelper {
     private final static String IMAGE_TYPE = "thumbnail";
     private final PostRepository postRepository;
+    private final PostMongoRepository postMongoRepository;
     private final S3Provider s3Provider;
 
     private final KafkaProducer kafkaProducer;
@@ -40,12 +43,21 @@ public class PostHelper {
         return savedPost;
     }
 
+    public PostImage savePostImage(PostImage postImage) {
+        return postMongoRepository.save(postImage);
+    }
+
     public Page<PostDetailVo> findPostDetailVos(Long memberId, Pageable pageable) {
         return postRepository.findPostDetailVos(memberId, pageable);
     }
 
     public Post findPostOrThrow(Long postId) {
         return postRepository.findById(postId)
+                .orElseThrow(() -> PostNotFoundException.EXCEPTION);
+    }
+
+    public PostImage findPostImageOrThrow(Long postId) {
+        return postMongoRepository.findByPostId(postId)
                 .orElseThrow(() -> PostNotFoundException.EXCEPTION);
     }
 

@@ -4,6 +4,7 @@ import org.bootstrap.post.common.PageInfo;
 import org.bootstrap.post.dto.request.PostRequestDto;
 import org.bootstrap.post.dto.response.*;
 import org.bootstrap.post.entity.Post;
+import org.bootstrap.post.entity.PostImage;
 import org.bootstrap.post.vo.*;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -16,8 +17,8 @@ public class PostMapper {
         return Post.createPost(requestDto, memberId);
     }
 
-    public CreatePostResponseDto toCreatePostResponseDto(Post post) {
-        return CreatePostResponseDto.of(post);
+    public CreatePostResponseDto toCreatePostResponseDto(Post post, PostImage postImage) {
+        return CreatePostResponseDto.of(post, postImage);
     }
 
     public PostDetailResponseDto toPostDetailResponseDto(Post post) {
@@ -48,5 +49,9 @@ public class PostMapper {
     public CompositionPostWithViewCountResponseDto toCompositionPostWithViewCountResponseDto(CompositionCategoryPostVo postInfo,
                                                                                              Integer redisViewCount) {
         return CompositionPostWithViewCountResponseDto.of(postInfo, redisViewCount);
+    }
+
+    public PostImage toPostImage(Post post, PostRequestDto postRequestDto) {
+        return PostImage.createPostImage(post, postRequestDto.images());
     }
 }
