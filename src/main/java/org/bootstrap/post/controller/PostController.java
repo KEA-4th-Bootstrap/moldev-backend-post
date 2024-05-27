@@ -30,8 +30,10 @@ public class PostController {
     }
 
     @GetMapping("/{postId}/detail")
-    public ResponseEntity<PostDetailResponseDto> getPostDetail(@PathVariable final Long postId) {
-        final PostDetailResponseDto responseDto = postService.getPostDetail(postId);
+    public ResponseEntity<PostDetailResponseDto> getPostDetail(@PathVariable final Long postId,
+                                                               HttpServletRequest request,
+                                                               HttpServletResponse response) {
+        final PostDetailResponseDto responseDto = postService.getPostDetail(postId, request, response);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 

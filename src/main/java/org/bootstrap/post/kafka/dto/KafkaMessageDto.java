@@ -12,7 +12,7 @@ public record KafkaMessageDto(
 ) {
     public static KafkaMessageDto create(Post post) {
         return KafkaMessageDto.builder()
-                .content(post.getContent())
+                .content(post.getProfileContent())
                 .memberId(post.getMemberId())
                 .postId(post.getId())
                 .build();

@@ -66,8 +66,9 @@ public class PostService {
         return PostImagesResponseDto.of(postImage);
     }
 
-    public PostDetailResponseDto getPostDetail(Long postId) {
+    public PostDetailResponseDto getPostDetail(Long postId, HttpServletRequest request, HttpServletResponse response) {
         Post post = postHelper.findPostOrThrow(postId);
+        viewCountUpByCookie(post.getId(), request, response);
         kafkaProducer.send("update", KafkaMessageDto.update(post));
         return postMapper.toPostDetailResponseDto(post);
     }
