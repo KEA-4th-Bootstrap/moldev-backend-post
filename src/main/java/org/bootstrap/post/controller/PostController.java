@@ -30,10 +30,11 @@ public class PostController {
     }
 
     @GetMapping("/{postId}/detail")
-    public ResponseEntity<PostDetailResponseDto> getPostDetail(@RequestHeader("Authorization") final Long memberId,
+    public ResponseEntity<PostDetailResponseDto> getPostDetail(@RequestHeader(name = "Authorization", defaultValue = "0") final Long memberId,
                                                                @PathVariable final Long postId,
                                                                HttpServletRequest request,
                                                                HttpServletResponse response) {
+        System.out.println("memberId = " + memberId);
         final PostDetailResponseDto responseDto = postService.getPostDetail(postId, request, response, memberId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
