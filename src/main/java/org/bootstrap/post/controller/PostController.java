@@ -30,10 +30,11 @@ public class PostController {
     }
 
     @GetMapping("/{postId}/detail")
-    public ResponseEntity<PostDetailResponseDto> getPostDetail(@PathVariable final Long postId,
+    public ResponseEntity<PostDetailResponseDto> getPostDetail(@RequestHeader("Authorization") final Long memberId,
+                                                               @PathVariable final Long postId,
                                                                HttpServletRequest request,
                                                                HttpServletResponse response) {
-        final PostDetailResponseDto responseDto = postService.getPostDetail(postId, request, response);
+        final PostDetailResponseDto responseDto = postService.getPostDetail(postId, request, response, memberId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 

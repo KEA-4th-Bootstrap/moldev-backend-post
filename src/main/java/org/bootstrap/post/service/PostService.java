@@ -66,10 +66,10 @@ public class PostService {
         return PostImagesResponseDto.of(postImage);
     }
 
-    public PostDetailResponseDto getPostDetail(Long postId, HttpServletRequest request, HttpServletResponse response) {
+    public PostDetailResponseDto getPostDetail(Long postId, HttpServletRequest request, HttpServletResponse response, Long memberId) {
         Post post = postHelper.findPostOrThrow(postId);
         viewCountUpByCookie(post.getId(), request, response);
-        kafkaProducer.send("update", KafkaMessageDto.update(post));
+        kafkaProducer.send("update", KafkaMessageDto.update(post, memberId));
         return postMapper.toPostDetailResponseDto(post);
     }
 
@@ -83,7 +83,7 @@ public class PostService {
         PostImage postImage = createPostImageAndSave(post, requestDto);
         String frontUrl = FrontUrlGenerator.createFrontUrl(post);
         post.updateFrontUrl(frontUrl);
-        kafkaProducer.send("update", KafkaMessageDto.create(post));
+        kafkaProducer.send("update", KafkaMessageDto.create(post, memberId));
         return postMapper.toCreatePostResponseDto(post, postImage);
     }
 

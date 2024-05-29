@@ -10,17 +10,17 @@ public record KafkaMessageDto(
         Long memberId,
         Long postId
 ) {
-    public static KafkaMessageDto create(Post post) {
+    public static KafkaMessageDto create(Post post, Long memberId) {
         return KafkaMessageDto.builder()
                 .content(post.getProfileContent())
-                .memberId(post.getMemberId())
+                .memberId(memberId)
                 .postId(post.getId())
                 .build();
     }
 
-    public static KafkaMessageDto update(Post post) {
+    public static KafkaMessageDto update(Post post, Long memberId) {
         return KafkaMessageDto.builder()
-                .memberId(post.getMemberId())
+                .memberId(memberId)
                 .postId(post.getId())
                 .build();
     }
