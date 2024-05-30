@@ -130,6 +130,8 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         eqCategoryType(type)
                 )
                 .orderBy(post.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Post> countQuery = jpaQueryFactory
