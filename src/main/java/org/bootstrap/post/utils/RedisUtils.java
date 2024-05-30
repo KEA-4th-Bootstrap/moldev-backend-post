@@ -29,7 +29,7 @@ public class RedisUtils {
     }
 
     public Set<Long> getTrendingPostIds(String key, int size, Long offset) {
-        Set<String> stringSet = getZSetOperations().reverseRangeByScore(key, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+        Set<String> stringSet = getZSetOperations().reverseRange(key, offset, offset + size - 1);
         return stringSet.stream()
                 .map(Long::parseLong)
                 .collect(Collectors.toSet());
