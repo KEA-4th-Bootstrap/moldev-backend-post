@@ -44,12 +44,12 @@ public class PostService {
     private final KafkaProducer kafkaProducer;
     private final PostRepository postRepository;
 
-    public SameCategoryPostsResponseDto getSameCategoryPosts(Long postId, CategoryType type, Integer preC, Integer postC) {
-        Long preCount = postHelper.countPostsBeforeCurrentId(postId, type);
-        Long postCount = postHelper.countPostsAfterCurrentId(postId, type);
-        List<PostTitleAndDateVo> postsBeforeCurrentId = getPostsBeforeCurrentId(postId, type, postCount, preC);
-        List<PostTitleAndDateVo> postsAfterCurrentId = getPostsAfterCurrentId(postId, type, preCount, postC);
-        PostTitleAndDateVo currentPost = postHelper.findPostTitleAndDateVoCurrentId(postId, type, preC, postC);
+    public SameCategoryPostsResponseDto getSameCategoryPosts(Long postId, String moldevId, CategoryType type, Integer preC, Integer postC) {
+        Long preCount = postHelper.countPostsBeforeCurrentId(postId, moldevId, type);
+        Long postCount = postHelper.countPostsAfterCurrentId(postId, moldevId, type);
+        List<PostTitleAndDateVo> postsBeforeCurrentId = getPostsBeforeCurrentId(postId, moldevId, type, postCount, preC);
+        List<PostTitleAndDateVo> postsAfterCurrentId = getPostsAfterCurrentId(postId, moldevId, type, preCount, postC);
+        PostTitleAndDateVo currentPost = postHelper.findPostTitleAndDateVoCurrentId(postId, moldevId, type, preC, postC);
         composePostResponseList(postsBeforeCurrentId, postsAfterCurrentId, currentPost);
         return postMapper.toSameCategoryPostsResponseDto(postsBeforeCurrentId, preCount, postCount);
     }
@@ -109,20 +109,20 @@ public class PostService {
         return postHelper.savePostImage(postImage);
     }
 
-    private List<PostTitleAndDateVo> getPostsBeforeCurrentId(Long postId, CategoryType type, Long postCount, Integer preC) {
+    private List<PostTitleAndDateVo> getPostsBeforeCurrentId(Long postId, String moldevId, CategoryType type, Long postCount, Integer preC) {
         if (Objects.isNull(preC) || preC == 0) return new ArrayList<>();
         long requestBeforeCount = preC;
         if (postCount < preC)
             requestBeforeCount = preC + (preC - postCount);
-        return postHelper.findPostsBeforeCurrentId(postId, type, requestBeforeCount);
+        return postHelper.findPostsBeforeCurrentId(postId, moldevId, type, requestBeforeCount);
     }
 
-    private List<PostTitleAndDateVo> getPostsAfterCurrentId(Long postId, CategoryType type, Long preCount, Integer postC) {
+    private List<PostTitleAndDateVo> getPostsAfterCurrentId(Long postId, String moldevId, CategoryType type, Long preCount, Integer postC) {
         if (Objects.isNull(postC) || postC == 0) return new ArrayList<>();
         long requestAfterCount = postC;
         if (preCount < postC)
             requestAfterCount = postC + (postC - preCount);
-        return postHelper.findPostsAfterCurrentId(postId, type, requestAfterCount);
+        return postHelper.findPostsAfterCurrentId(postId, moldevId, type, requestAfterCount);
     }
 
     private void composePostResponseList(List<PostTitleAndDateVo> postsBeforeCurrentId,

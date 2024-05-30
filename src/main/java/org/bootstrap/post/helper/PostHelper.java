@@ -75,27 +75,27 @@ public class PostHelper {
         return postRepository.findPostCountForUserAndCategory(moldevId, type);
     }
 
-    public PostTitleAndDateVo findPostTitleAndDateVoCurrentId(Long currentId, CategoryType type, Integer preC, Integer postC) {
+    public PostTitleAndDateVo findPostTitleAndDateVoCurrentId(Long currentId, String moldevId, CategoryType type, Integer preC, Integer postC) {
         if (preC == 0 || postC == 0)
             return null;
-        return postRepository.findPostTitleAndDateVo(currentId, type)
+        return postRepository.findPostTitleAndDateVo(currentId, moldevId, type)
                 .orElseThrow(() -> PostNotFoundException.EXCEPTION);
     }
 
-    public List<PostTitleAndDateVo> findPostsAfterCurrentId(Long currentId, CategoryType type, long beforeSize) {
-        return postRepository.findPostsAfterCurrentId(currentId, type, beforeSize);
+    public List<PostTitleAndDateVo> findPostsAfterCurrentId(Long currentId, String moldevId, CategoryType type, long beforeSize) {
+        return postRepository.findPostsAfterCurrentId(currentId, moldevId, type, beforeSize);
     }
 
-    public List<PostTitleAndDateVo> findPostsBeforeCurrentId(Long currentId, CategoryType type, long beforeSize) {
-        return postRepository.findPostsBeforeCurrentId(currentId, type, beforeSize);
+    public List<PostTitleAndDateVo> findPostsBeforeCurrentId(Long currentId, String moldevId, CategoryType type, long beforeSize) {
+        return postRepository.findPostsBeforeCurrentId(currentId, moldevId, type, beforeSize);
     }
 
-    public long countPostsAfterCurrentId(Long currentId, CategoryType type) {
-        return postRepository.countPostsAfterCurrentId(currentId, type);
+    public long countPostsAfterCurrentId(Long currentId, String moldevId, CategoryType type) {
+        return postRepository.countPostsAfterCurrentId(currentId, moldevId, type);
     }
 
-    public long countPostsBeforeCurrentId(Long currentId, CategoryType type) {
-        return postRepository.countPostsBeforeCurrentId(currentId, type);
+    public long countPostsBeforeCurrentId(Long currentId, String moldevId, CategoryType type) {
+        return postRepository.countPostsBeforeCurrentId(currentId, moldevId, type);
     }
 
     public void deletePost(Long postId) {

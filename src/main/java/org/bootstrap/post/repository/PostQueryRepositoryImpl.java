@@ -12,7 +12,6 @@ import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.vo.CompositionCategoryPostVo;
 import org.bootstrap.post.vo.PostCategoryInfoVo;
 import org.bootstrap.post.vo.PostDetailVo;
-import java.time.format.DateTimeFormatter;
 import org.bootstrap.post.vo.PostTitleAndDateVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -178,7 +177,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
     }
 
     @Override
-    public List<PostTitleAndDateVo> findPostsBeforeCurrentId(Long postId, CategoryType type, long beforeSize) {
+    public List<PostTitleAndDateVo> findPostsBeforeCurrentId(Long postId, String moldevId, CategoryType type, long beforeSize) {
         return jpaQueryFactory
                 .select(Projections.constructor(PostTitleAndDateVo.class,
                         post.id,
@@ -188,6 +187,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                 .from(post)
                 .where(
                         ltPostId(postId),
+                        eqMoldevId(moldevId),
                         eqCategoryType(type)
                 )
                 .orderBy(post.id.desc())
@@ -196,7 +196,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
     }
 
     @Override
-    public List<PostTitleAndDateVo> findPostsAfterCurrentId(Long postId, CategoryType type, long afterSize) {
+    public List<PostTitleAndDateVo> findPostsAfterCurrentId(Long postId, String moldevId, CategoryType type, long afterSize) {
         return jpaQueryFactory
                 .select(Projections.constructor(PostTitleAndDateVo.class,
                         post.id,
@@ -206,6 +206,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                 .from(post)
                 .where(
                         gtPostId(postId),
+                        eqMoldevId(moldevId),
                         eqCategoryType(type)
                 )
                 .orderBy(post.id.asc())
@@ -214,7 +215,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
     }
 
     @Override
-    public Optional<PostTitleAndDateVo> findPostTitleAndDateVo(Long postId, CategoryType type) {
+    public Optional<PostTitleAndDateVo> findPostTitleAndDateVo(Long postId, String moldevId, CategoryType type) {
         return Optional.ofNullable(jpaQueryFactory
                 .select(Projections.constructor(PostTitleAndDateVo.class,
                         post.id,
@@ -224,6 +225,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                 .from(post)
                 .where(
                         eqPostId(postId),
+                        eqMoldevId(moldevId),
                         eqCategoryType(type)
                 )
                 .orderBy(post.id.desc())
@@ -231,22 +233,24 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
     }
 
     @Override
-    public long countPostsBeforeCurrentId(Long currentId, CategoryType type) {
+    public long countPostsBeforeCurrentId(Long currentId, String moldevId, CategoryType type) {
         return jpaQueryFactory
                 .selectFrom(post)
                 .where(
                         ltPostId(currentId),
+                        eqMoldevId(moldevId),
                         eqCategoryType(type)
                 )
                 .fetchCount();
     }
 
     @Override
-    public long countPostsAfterCurrentId(Long currentId, CategoryType type) {
+    public long countPostsAfterCurrentId(Long currentId, String moldevId, CategoryType type) {
         return jpaQueryFactory
                 .selectFrom(post)
                 .where(
                         gtPostId(currentId),
+                        eqMoldevId(moldevId),
                         eqCategoryType(type)
                 )
                 .fetchCount();

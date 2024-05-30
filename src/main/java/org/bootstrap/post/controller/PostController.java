@@ -49,10 +49,11 @@ public class PostController {
 
     @GetMapping("/{postId}/category/list")
     public ResponseEntity<SuccessResponse<?>> getSameCategoryPosts(@PathVariable final Long postId,
+                                                                   @RequestParam final String moldevId,
                                                                    @RequestParam final CategoryType type,
                                                                    @RequestParam final Integer preCount,
                                                                    @RequestParam final Integer postCount) {
-        final SameCategoryPostsResponseDto responseDto = postService.getSameCategoryPosts(postId, type, preCount, postCount);
+        final SameCategoryPostsResponseDto responseDto = postService.getSameCategoryPosts(postId, moldevId, type, preCount, postCount);
         return SuccessResponse.ok(responseDto);
     }
 

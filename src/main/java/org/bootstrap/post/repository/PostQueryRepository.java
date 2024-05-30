@@ -19,9 +19,9 @@ public interface PostQueryRepository {
     Page<PostCategoryInfoVo> findPostCategoryInfoVos(String moldevId, CategoryType type, Pageable pageable);
     List<CompositionCategoryPostVo> findCompositionCategoryPostVo(String moldevId, CategoryType type);
     Long findPostCountForUserAndCategory(String moldevId, CategoryType type);
-    List<PostTitleAndDateVo> findPostsBeforeCurrentId(Long postId, CategoryType type, long beforeSize);
-    List<PostTitleAndDateVo> findPostsAfterCurrentId(Long postId, CategoryType type, long afterSize);
-    Optional<PostTitleAndDateVo> findPostTitleAndDateVo(Long postId, CategoryType type);
-    long countPostsBeforeCurrentId(Long currentId, CategoryType type);
-    long countPostsAfterCurrentId(Long currentId, CategoryType type);
+    List<PostTitleAndDateVo> findPostsBeforeCurrentId(Long postId, String moldevId, CategoryType type, long beforeSize);
+    List<PostTitleAndDateVo> findPostsAfterCurrentId(Long postId, String moldevId, CategoryType type, long afterSize);
+    Optional<PostTitleAndDateVo> findPostTitleAndDateVo(Long postId, String moldevId, CategoryType type);
+    long countPostsBeforeCurrentId(Long currentId, String moldevId, CategoryType type);
+    long countPostsAfterCurrentId(Long currentId, String moldevId, CategoryType type);
 }
