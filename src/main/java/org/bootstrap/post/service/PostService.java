@@ -19,6 +19,7 @@ import org.bootstrap.post.utils.CookieUtils;
 import org.bootstrap.post.utils.FrontUrlGenerator;
 import org.bootstrap.post.utils.RedisUtils;
 import org.bootstrap.post.vo.*;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -175,11 +176,12 @@ public class PostService {
                 .toList();
     }
 
+    @Cacheable(value = "trendPost", key = "'Trend'")
     public TrendingPostsResponseDto getTrendingPosts() {
         Set<Long> trendingPostIds = redisUtils.getTrendingPostIds(POST_VIEW_COUNT, 18, 0L);
         List<PostDetailVo> postDetailVosByPostIds = postHelper.findTrendingPostDetailVos(trendingPostIds);
         List<PostDetailWithRedisVo> postDetailWithRedisVos = createPostDetailWithRedisVos(postDetailVosByPostIds);
-        return postMapper.toTrendingPostsResponseDto(postDetailWithRedisVos);
+        return TrendingPostsResponseDto.of(postDetailWithRedisVos);
     }
 
     private List<PostDetailWithRedisVo> createPostDetailWithRedisVos(List<PostDetailVo> postDetailVos) {
