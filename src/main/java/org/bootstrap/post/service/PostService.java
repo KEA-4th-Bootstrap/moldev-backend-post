@@ -176,7 +176,7 @@ public class PostService {
                 .toList();
     }
 
-    @Cacheable(value = "trendPost", key = "'Trend'")
+    // @Cacheable(value = "trendPost", key = "'Trend'")
     public TrendingPostsResponseDto getTrendingPosts() {
         Set<Long> trendingPostIds = redisUtils.getTrendingPostIds(POST_VIEW_COUNT, 18, 0L);
         List<PostDetailVo> postDetailVosByPostIds = postHelper.findTrendingPostDetailVos(trendingPostIds);
