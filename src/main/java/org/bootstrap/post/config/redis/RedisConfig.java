@@ -49,12 +49,12 @@ public class RedisConfig {
     @Bean
     public CacheManager trendPostCacheManager() {
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()  // defaultCacheConfig() 는 기본값으로 설정된 RedisCacheConfiguration 객체 리턴
-                .entryTtl(Duration.ofMinutes(5))
+                .entryTtl(Duration.ofMinutes(30))
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())) // 캐시 데이터 key 직렬화 시 문자열로 변환하여 저장
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));  // 캐시 데이터 value 직렬화할 때 JSON 으로 변환하여 저장
 
         Map<String, RedisCacheConfiguration> configurations = new HashMap<>();
-        configurations.put("trendPost", defaultConfig.entryTtl(Duration.ofMinutes(1)));
+        configurations.put("trendPost", defaultConfig.entryTtl(Duration.ofMinutes(5)));
 
         return RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(redisConnectionFactory())  // RedisCacheManager 가 사용할 RedisConnectionFactory 객체 설정
