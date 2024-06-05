@@ -92,4 +92,23 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            slackSend (
+                channel: '#bootstrap-jenkins', 
+                color: '#00FF00', 
+                message: """
+                    SUCCESS: Job ${env.JOB_NAME} [${env.BUILD_NUMBER}]
+                """
+            )
+        }
+        failure {
+            slackSend (
+                channel: '#bootstrap-jenkins', 
+                color: '#FF0000', 
+                message: "FAIL: Job ${env.JOB_NAME} [${env.BUILD_NUMBER}]"
+            )
+        }
+    }
 }
