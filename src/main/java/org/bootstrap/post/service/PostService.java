@@ -96,7 +96,7 @@ public class PostService {
     public void updatePost(Long postId, PostRequestDto requestDto) {
         Post post = postHelper.findPostOrThrow(postId);
         postHelper.deletePostImages(post.getId());
-        PostImage postImage = postHelper.findPostImageOrThrow(post.getId());
+        PostImage postImage = createPostImageAndSave(post, requestDto);
         post.updatePost(requestDto);
         postImage.updateImages(requestDto.images());
     }
