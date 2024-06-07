@@ -1,13 +1,11 @@
 package org.bootstrap.post.helper;
 
 import lombok.RequiredArgsConstructor;
-import org.bootstrap.post.dto.request.PostImageRequestDto;
 import org.bootstrap.post.entity.CategoryType;
 import org.bootstrap.post.entity.Post;
 import org.bootstrap.post.entity.PostImage;
 import org.bootstrap.post.exception.PostNotFoundException;
 import org.bootstrap.post.kafka.KafkaProducer;
-import org.bootstrap.post.kafka.dto.KafkaMessageDto;
 import org.bootstrap.post.mongorepository.PostMongoRepository;
 import org.bootstrap.post.repository.PostRepository;
 import org.bootstrap.post.utils.S3Provider;
@@ -100,5 +98,9 @@ public class PostHelper {
 
     public void deletePost(Long postId) {
         postRepository.deleteById(postId);
+    }
+
+    public void deletePostImages(Long postId) {
+        postMongoRepository.deleteByPostId(postId);
     }
 }

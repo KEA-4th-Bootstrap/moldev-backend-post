@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface PostMongoRepository extends MongoRepository<PostImage, String>, MongoCustomRepository {
     Optional<PostImage> findByPostId(Long postId);
+    void deleteByPostId(Long postId);
 }

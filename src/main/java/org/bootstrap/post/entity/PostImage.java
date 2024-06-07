@@ -16,7 +16,6 @@ import static org.bootstrap.post.utils.EntityUpdateValueUtils.updateValue;
 @Document(collection = "post_image")
 public class PostImage {
     @Id
-    @Field(name = "_id")
     private String id;
 
     @Field(name = "post_id")
