@@ -117,4 +117,9 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @GetMapping("/report/{postId}")
+    public ResponseEntity<PostReportDetailResponseDto> getPostReportDetail(@PathVariable Long postId) {
+        final PostReportDetailResponseDto responseDto = postService.getPostReportDetail(postId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
 }

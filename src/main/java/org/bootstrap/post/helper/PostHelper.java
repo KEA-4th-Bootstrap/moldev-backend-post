@@ -9,10 +9,7 @@ import org.bootstrap.post.kafka.KafkaProducer;
 import org.bootstrap.post.mongorepository.PostMongoRepository;
 import org.bootstrap.post.repository.PostRepository;
 import org.bootstrap.post.utils.S3Provider;
-import org.bootstrap.post.vo.CompositionCategoryPostVo;
-import org.bootstrap.post.vo.PostCategoryInfoVo;
-import org.bootstrap.post.vo.PostDetailVo;
-import org.bootstrap.post.vo.PostTitleAndDateVo;
+import org.bootstrap.post.vo.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -102,5 +99,10 @@ public class PostHelper {
 
     public void deletePostImages(Long postId) {
         postMongoRepository.deleteByPostId(postId);
+    }
+
+    public Post findPostById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> PostNotFoundException.EXCEPTION);
     }
 }

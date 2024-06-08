@@ -205,4 +205,9 @@ public class PostService {
                 .collect(Collectors.toList());
         return RecentPostsResponseListDto.of(responseDtoList);
     }
+
+    public PostReportDetailResponseDto getPostReportDetail(Long postId) {
+        Post post = postHelper.findPostById(postId);
+        return PostReportDetailResponseDto.of(post);
+    }
 }
